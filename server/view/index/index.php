@@ -2,6 +2,7 @@
 <html lang="zh">
 <head>
     {include file="common/head" /}
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
 </head>
 <body>
 <div class="min-h-screen bg-gray-50">
@@ -47,7 +48,7 @@
                         <h3 class="text-lg font-medium">流量日志</h3>
                     </div>
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
+                        <table class="min-w-full divide-y divide-gray-200" id="logTable">
                             <thead class="bg-gray-50">
                             <tr>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -71,53 +72,44 @@
                             </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                            <tr class="hover:bg-gray-50 cursor-pointer">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-02-28 10:23:45</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">192.168.1.100</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">example.com</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">GET</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">200</td>
+                            {volist name="logs" id="log"}
+                            <tr class="hover:bg-gray-50 cursor-pointer" onclick="showDetails({$log.id})">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{$log.request_time}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{$log.source_ip}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{$log.target_domain}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{$log.request_type}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{$log.status_code}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    <a href="{:URL('index_detail')}" class="text-custom hover:text-custom-dark" onclick="showDetails(1)">
+                                    <a href="{:URL('detail', ['id' => $log.id])}" class="text-custom hover:text-custom-dark">
                                         查看详情
                                     </a>
                                 </td>
                             </tr>
-                            <tr class="hover:bg-gray-50 cursor-pointer">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-02-28 10:23:42</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">192.168.1.101</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">test.com</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">POST</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">404</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    <a href="{:URL('index_detail')}" class="text-custom hover:text-custom-dark" onclick="showDetails(2)">
-                                        查看详情
-                                    </a>
-                                </td>
-                            </tr>
+                            {/volist}
                             </tbody>
                         </table>
                     </div>
-                    <div id="details-panel" class="hidden border-t border-gray-200 p-4"><h4
-                                class="text-lg font-medium mb-4">记录详情</h4>
+
+                    <div id="details-panel" class="border-t border-gray-200 p-4">
+                        <h4 class="text-lg font-medium mb-4">记录详情</h4>
                         <div class="grid grid-cols-2 gap-4">
                             <div><p class="text-sm text-gray-500">请求时间</p>
-                                <p class="text-sm font-medium">2024-02-28 10:23:45</p></div>
+                                <p class="text-sm font-medium" id="detail-request-time"></p></div>
                             <div><p class="text-sm text-gray-500">源IP地址</p>
-                                <p class="text-sm font-medium">192.168.1.100</p></div>
+                                <p class="text-sm font-medium" id="detail-source-ip"></p></div>
                             <div><p class="text-sm text-gray-500">目标域名</p>
-                                <p class="text-sm font-medium">example.com</p></div>
+                                <p class="text-sm font-medium" id="detail-target-domain"></p></div>
                             <div><p class="text-sm text-gray-500">请求类型</p>
-                                <p class="text-sm font-medium">GET</p></div>
+                                <p class="text-sm font-medium" id="detail-request-type"></p></div>
                             <div><p class="text-sm text-gray-500">状态码</p>
-                                <p class="text-sm font-medium">200</p></div>
+                                <p class="text-sm font-medium" id="detail-status-code"></p></div>
                             <div><p class="text-sm text-gray-500">响应大小</p>
-                                <p class="text-sm font-medium">1.2 MB</p></div>
+                                <p class="text-sm font-medium" id="detail-response-size"></p></div>
                             <div class="col-span-2"><p class="text-sm text-gray-500">请求头</p>
-                                <pre class="mt-1 text-sm bg-gray-50 p-2 rounded">{&#34;User-Agent&#34;: &#34;Mozilla/5.0&#34;,&#34;Accept&#34;: &#34;text/html&#34;}</pre>
+                                <pre class="mt-1 text-sm bg-gray-50 p-2 rounded" id="detail-request-header"></pre>
                             </div>
                             <div class="col-span-2"><p class="text-sm text-gray-500">响应头</p>
-                                <pre class="mt-1 text-sm bg-gray-50 p-2 rounded">{&#34;Content-Type&#34;: &#34;text/html&#34;,&#34;Server&#34;: &#34;nginx/1.18.0&#34;}</pre>
+                                <pre class="mt-1 text-sm bg-gray-50 p-2 rounded" id="detail-response-header"></pre>
                             </div>
                         </div>
                     </div>
@@ -130,6 +122,10 @@
     const chartDom = document.getElementById('trafficChart');
     const myChart = echarts.init(chartDom);
 
+    const chartData = <?php echo json_encode($chartData); ?>;
+    const times = chartData.map(item => item.time);
+    const counts = chartData.map(item => item.count);
+
     const option = {
         title: {
             text: '实时流量统计'
@@ -139,7 +135,7 @@
         },
         xAxis: {
             type: 'category',
-            data: ['10:00', '10:05', '10:10', '10:15', '10:20', '10:25', '10:30']
+            data: times
         },
         yAxis: {
             type: 'value',
@@ -147,7 +143,7 @@
         },
         series: [
             {
-                data: [150, 230, 224, 218, 135, 147, 260],
+                data: counts,
                 type: 'line',
                 smooth: true,
                 color: '#000000'
@@ -155,7 +151,21 @@
         ]
     };
     myChart.setOption(option);
-</script>
 
+    function showDetails(id) {
+        fetch("{:URL('detail', ['id' => '__ID__'])}".replace('__ID__', id))
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('detail-request-time').innerText = data.request_time;
+                document.getElementById('detail-source-ip').innerText = data.source_ip;
+                document.getElementById('detail-target-domain').innerText = data.target_domain;
+                document.getElementById('detail-request-type').innerText = data.request_type;
+                document.getElementById('detail-status-code').innerText = data.status_code;
+                document.getElementById('detail-response-size').innerText = '1.2 MB'; // 假设固定值
+                document.getElementById('detail-request-header').innerText = JSON.stringify({"User-Agent": "Mozilla/5.0", "Accept": "text/html"}, null, 2);
+                document.getElementById('detail-response-header').innerText = JSON.stringify({"Content-Type": "text/html", "Server": "nginx/1.18.0"}, null, 2);
+            });
+    }
+</script>
 </body>
 </html>

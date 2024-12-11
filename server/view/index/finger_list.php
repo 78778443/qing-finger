@@ -48,40 +48,43 @@
             </div>
             <div class="flex-1 space-y-6">
                 <div class="grid grid-cols-4 gap-4 mb-6">
-                    <div class="bg-white p-4 rounded-lg shadow"><h3 class="text-lg font-medium text-gray-900">
-                            总指纹数</h3>
-                        <p class="mt-2 text-3xl font-semibold text-custom">12,456</p>
-                        <p class="text-sm text-gray-500 mt-1">较昨日 +123</p></div>
-                    <div class="bg-white p-4 rounded-lg shadow"><h3 class="text-lg font-medium text-gray-900">
-                            今日新增</h3>
-                        <p class="mt-2 text-3xl font-semibold text-green-500">234</p>
-                        <p class="text-sm text-gray-500 mt-1">较昨日 +45</p></div>
-                    <div class="bg-white p-4 rounded-lg shadow"><h3 class="text-lg font-medium text-gray-900">
-                            识别准确率</h3>
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h3 class="text-lg font-medium text-gray-900">总指纹数</h3>
+                        <p class="mt-2 text-3xl font-semibold text-custom"><?= number_format($totalCount) ?></p>
+                        <p class="text-sm text-gray-500 mt-1">
+                            较昨日 <?= $totalDifference >= 0 ? '+' : '' ?><?= number_format($totalDifference) ?></p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h3 class="text-lg font-medium text-gray-900">今日新增</h3>
+                        <p class="mt-2 text-3xl font-semibold text-green-500">{$count}</p>
+                        <p class="text-sm text-gray-500 mt-1">较昨日 {if $difference >= 0}+{/if}{$difference}</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h3 class="text-lg font-medium text-gray-900">识别准确率</h3>
                         <p class="mt-2 text-3xl font-semibold text-blue-500">98.5%</p>
-                        <p class="text-sm text-gray-500 mt-1">较昨日 +0.5%</p></div>
-                    <div class="bg-white p-4 rounded-lg shadow"><h3 class="text-lg font-medium text-gray-900">
-                            重复指纹</h3>
+                        <p class="text-sm text-gray-500 mt-1">较昨日 +0.5%</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg shadow">
+                        <h3 class="text-lg font-medium text-gray-900">重复指纹</h3>
                         <p class="mt-2 text-3xl font-semibold text-red-500">45</p>
-                        <p class="text-sm text-gray-500 mt-1">较昨日 -12</p></div>
+                        <p class="text-sm text-gray-500 mt-1">较昨日 -12</p>
+                    </div>
                 </div>
                 <div class="bg-white rounded-lg shadow">
                     <div class="px-4 py-3 border-b border-gray-200 flex justify-between items-center"><h3
                                 class="text-lg font-medium">指纹列表</h3>
-                        <div class="flex gap-2">
-                            <button class="px-3 py-1.5 text-sm bg-custom text-white rounded-md">新建指纹</button>
-                            <button class="px-3 py-1.5 text-sm border border-gray-300 rounded-md">批量导入</button>
-                        </div>
                     </div>
                     <div class="p-4">
-                        <div class="flex gap-4 mb-4"><input type="text" placeholder="搜索指纹ID、名称、特征值..."
-                                                            class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm"/><select
-                                    class="border border-gray-300 rounded-md px-3 py-2 text-sm">
+                        <div class="flex gap-4 mb-4">
+                            <input type="text" placeholder="搜索指纹ID、名称、特征值..."
+                                   class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm"/>
+                            <select class="border border-gray-300 rounded-md px-3 py-2 text-sm">
                                 <option>全部类型</option>
                                 <option>ThinkPHP</option>
                                 <option>Nginx</option>
                                 <option>Apache</option>
-                            </select><select class="border border-gray-300 rounded-md px-3 py-2 text-sm">
+                            </select>
+                            <select class="border border-gray-300 rounded-md px-3 py-2 text-sm">
                                 <option>全部状态</option>
                                 <option>正常</option>
                                 <option>异常</option>
@@ -90,6 +93,7 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                             <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">序号</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">指纹ID</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">域名</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">指纹类型
@@ -101,39 +105,27 @@
                             </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
+                            {volist name="fingers" id="finger"}
                             <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 text-sm text-gray-900">FP24022801</td>
-                                <td class="px-6 py-4 text-sm text-gray-900">example1.com</td>
-                                <td class="px-6 py-4 text-sm text-gray-900">ThinkPHP</td>
-                                <td class="px-6 py-4 text-sm"><span
-                                            class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">正常</span>
+                                <td class="px-6 py-4 text-sm text-gray-900">{$finger.id}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900">{$finger.finger_id}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900">{$finger.domain}</td>
+                                <td class="px-6 py-4 text-sm text-gray-900">{$finger.finger_type}</td>
+                                <td class="px-6 py-4 text-sm">
+                                    {switch name="finger.status"}{case value="正常"}
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">正常</span>
+                                    {/case} {case value="待验证"}
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">待验证</span>
+                                    {/case} {case value="异常"}
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">异常</span>
+                                    {/case}{/switch}
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-900">2024-02-28</td>
-                                <td class="px-6 py-4 text-sm"><a  href="{:URL('finger_detail')}" class="text-custom hover:underline">查看</a>
-                                </td>
+                                <td class="px-6 py-4 text-sm text-gray-900">{$finger.created_at}</td>
+                                <td class="px-6 py-4 text-sm">
+                                    <a href="{:url('detail', ['id' => $finger.id])}"
+                                       class="text-custom hover:underline">查看</a></td>
                             </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 text-sm text-gray-900">FP24022802</td>
-                                <td class="px-6 py-4 text-sm text-gray-900">example2.com</td>
-                                <td class="px-6 py-4 text-sm text-gray-900">Nginx</td>
-                                <td class="px-6 py-4 text-sm"><span
-                                            class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">待验证</span>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-900">2024-02-28</td>
-                                <td class="px-6 py-4 text-sm"><a  href="{:URL('finger_detail')}" class="text-custom hover:underline">查看</a>
-                                </td>
-                            </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 text-sm text-gray-900">FP24022803</td>
-                                <td class="px-6 py-4 text-sm text-gray-900">example3.com</td>
-                                <td class="px-6 py-4 text-sm text-gray-900">Apache</td>
-                                <td class="px-6 py-4 text-sm"><span
-                                            class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">异常</span>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-900">2024-02-28</td>
-                                <td class="px-6 py-4 text-sm"><a  href="{:URL('finger_detail')}" class="text-custom hover:underline">查看</a>
-                                </td>
-                            </tr>
+                            {/volist}
                             </tbody>
                         </table>
                         <div class="flex justify-between items-center mt-4"><p class="text-sm text-gray-700">显示 1 到
