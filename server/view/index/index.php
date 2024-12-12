@@ -11,33 +11,36 @@
         <div class="flex gap-6">
             <div class="w-64 bg-white rounded-lg shadow p-4">
                 <h3 class="text-lg font-medium mb-4">流量过滤</h3>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">时间范围</label>
-                        <input type="datetime-local" class="w-full border-gray-300 rounded-md text-sm"/>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">域名</label>
-                        <input type="text" class="w-full border-gray-300 rounded-md text-sm" placeholder="请输入域名"/>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">IP地址</label>
-                        <input type="text" class="w-full border-gray-300 rounded-md text-sm"
-                               placeholder="请输入IP地址"/>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">请求类型</label>
-                        <div class="relative">
-                            <button class="w-full text-left border border-gray-300 rounded-md px-3 py-2 text-sm bg-white !rounded-button">
-                                <span>全部</span>
-                                <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2"></i>
-                            </button>
+                <form action="/index/index" method="get">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">时间范围</label>
+                            <input type="datetime-local" name="" class="w-full border-gray-300 rounded-md text-sm"/>
                         </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">域名</label>
+                            <input type="text" name="target_domain" class="w-full border-gray-300 rounded-md text-sm"
+                                   placeholder="请输入域名"/>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">IP地址</label>
+                            <input type="text" name="source_ip" class="w-full border-gray-300 rounded-md text-sm"
+                                   placeholder="请输入IP地址"/>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">请求类型</label>
+                            <div class="relative">
+                                <button class="w-full text-left border border-gray-300 rounded-md px-3 py-2 text-sm bg-white !rounded-button">
+                                    <span>全部</span>
+                                    <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full bg-custom text-white py-2 text-sm !rounded-button">
+                            应用筛选
+                        </button>
                     </div>
-                    <button class="w-full bg-custom text-white py-2 text-sm !rounded-button">
-                        应用筛选
-                    </button>
-                </div>
+                </form>
             </div>
             <div class="flex-1 space-y-6">
                 <div class="bg-white rounded-lg shadow p-4 h-64">
@@ -80,7 +83,8 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{$log.request_type}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{$log.status_code}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                    <a href="{:URL('detail', ['id' => $log.id])}" class="text-custom hover:text-custom-dark">
+                                    <a href="{:URL('detail', ['id' => $log.id])}"
+                                       class="text-custom hover:text-custom-dark">
                                         查看详情
                                     </a>
                                 </td>
@@ -162,8 +166,14 @@
                 document.getElementById('detail-request-type').innerText = data.request_type;
                 document.getElementById('detail-status-code').innerText = data.status_code;
                 document.getElementById('detail-response-size').innerText = '1.2 MB'; // 假设固定值
-                document.getElementById('detail-request-header').innerText = JSON.stringify({"User-Agent": "Mozilla/5.0", "Accept": "text/html"}, null, 2);
-                document.getElementById('detail-response-header').innerText = JSON.stringify({"Content-Type": "text/html", "Server": "nginx/1.18.0"}, null, 2);
+                document.getElementById('detail-request-header').innerText = JSON.stringify({
+                    "User-Agent": "Mozilla/5.0",
+                    "Accept": "text/html"
+                }, null, 2);
+                document.getElementById('detail-response-header').innerText = JSON.stringify({
+                    "Content-Type": "text/html",
+                    "Server": "nginx/1.18.0"
+                }, null, 2);
             });
     }
 </script>

@@ -19,7 +19,7 @@
             <div class="flex items-center">
                 <div class="flex items-center">
                     <img class="h-8 w-8 rounded-full"
-                         src="/static/images/logo.jpg"
+                         src="/server/public/images/logo.jpg"
                          alt="用户头像"/>
                     <span class="ml-2 text-sm text-gray-700">Daxia</span>
                 </div>

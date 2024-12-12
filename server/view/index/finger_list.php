@@ -10,41 +10,44 @@
         <div class="flex gap-6">
             <div class="w-64 bg-white rounded-lg shadow p-4">
                 <h3 class="text-lg font-medium mb-4">请求过滤</h3>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">时间范围</label>
-                        <input type="datetime-local" class="w-full border-gray-300 rounded-md text-sm"/>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">域名</label>
-                        <input type="text" class="w-full border-gray-300 rounded-md text-sm" placeholder="请输入域名"/>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">请求类型</label>
-                        <div class="relative">
-                            <button class="w-full text-left border border-gray-300 rounded-md px-3 py-2 text-sm bg-white !rounded-button">
-                                <span>全部</span>
-                                <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2"></i>
-                            </button>
+                <form action="/index/finger_list" method="get">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">时间范围</label>
+                            <input type="datetime-local" class="w-full border-gray-300 rounded-md text-sm"/>
                         </div>
-                    </div>
-                    <div><label class="block text-sm font-medium text-gray-700 mb-1">指纹类型</label>
-                        <div class="relative">
-                            <button class="w-full text-left border border-gray-300 rounded-md px-3 py-2 text-sm bg-white !rounded-button">
-                                <span>全部类型</span><i
-                                        class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2"></i>
-                            </button>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">域名</label>
+                            <input type="text" name="domain" class="w-full border-gray-300 rounded-md text-sm"
+                                   placeholder="请输入域名"/>
                         </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">请求类型</label>
+                            <div class="relative">
+                                <button class="w-full text-left border border-gray-300 rounded-md px-3 py-2 text-sm bg-white !rounded-button">
+                                    <span>全部</span>
+                                    <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div><label class="block text-sm font-medium text-gray-700 mb-1">指纹类型</label>
+                            <div class="relative">
+                                <button class="w-full text-left border border-gray-300 rounded-md px-3 py-2 text-sm bg-white !rounded-button">
+                                    <span>全部类型</span><i
+                                            class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div><label class="block text-sm font-medium text-gray-700 mb-1">域名筛选</label>
+                            <input type="text"
+                                   class="w-full border-gray-300 rounded-md text-sm"
+                                   placeholder="请输入域名关键词"/>
+                        </div>
+                        <button class="w-full bg-custom text-white py-2 text-sm !rounded-button mt-4">
+                            应用筛选
+                        </button>
                     </div>
-                    <div><label class="block text-sm font-medium text-gray-700 mb-1">域名筛选</label>
-                        <input type="text"
-                               class="w-full border-gray-300 rounded-md text-sm"
-                               placeholder="请输入域名关键词"/>
-                    </div>
-                    <button class="w-full bg-custom text-white py-2 text-sm !rounded-button mt-4">
-                        应用筛选
-                    </button>
-                </div>
+                </form>
             </div>
             <div class="flex-1 space-y-6">
                 <div class="grid grid-cols-4 gap-4 mb-6">
@@ -75,21 +78,30 @@
                                 class="text-lg font-medium">指纹列表</h3>
                     </div>
                     <div class="p-4">
-                        <div class="flex gap-4 mb-4">
-                            <input type="text" placeholder="搜索指纹ID、名称、特征值..."
-                                   class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm"/>
-                            <select class="border border-gray-300 rounded-md px-3 py-2 text-sm">
-                                <option>全部类型</option>
-                                <option>ThinkPHP</option>
-                                <option>Nginx</option>
-                                <option>Apache</option>
-                            </select>
-                            <select class="border border-gray-300 rounded-md px-3 py-2 text-sm">
-                                <option>全部状态</option>
-                                <option>正常</option>
-                                <option>异常</option>
-                                <option>待验证</option>
-                            </select></div>
+                        <form action="" method="get">
+                            <div class="flex gap-4 mb-4">
+                                <input type="text" placeholder="搜索指纹ID、名称、特征值..."
+                                       class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm"/>
+                                <select name="finger_type" class="border border-gray-300 rounded-md px-3 py-2 text-sm">
+                                    <option value="">全部类型</option>
+                                    <option>ThinkPHP</option>
+                                    <option>Nginx</option>
+                                    <option>Apache</option>
+                                </select>
+                                <select name="status" class="border border-gray-300 rounded-md px-3 py-2 text-sm">
+                                    <option value="">全部状态</option>
+                                    <option>正常</option>
+                                    <option>异常</option>
+                                    <option>待验证</option>
+                                </select>
+                                <div>
+                                    <button type="submit"
+                                            class="w-full bg-custom text-white py-2 text-sm !rounded-button">
+                                        搜索
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                             <tr>

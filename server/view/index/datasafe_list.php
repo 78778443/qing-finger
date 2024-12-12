@@ -12,28 +12,41 @@
             <div class="flex-1 space-y-6 w-full">
                 <div class="bg-white rounded-lg shadow p-6"><h2 class="text-xl font-bold mb-6">数据安全告警</h2>
                     <div class="flex justify-between items-center mb-6">
-                        <div class="flex space-x-4"><select class="rounded-lg border-gray-300 text-sm">
-                                <option>全部类型</option>
-                                <option>身份证信息泄露</option>
-                                <option>API Key泄露</option>
-                                <option>敏感数据导出</option>
-                                <option>SQL注入攻击</option>
-                            </select><select class="rounded-lg border-gray-300 text-sm">
-                                <option>全部风险等级</option>
-                                <option>高危</option>
-                                <option>中危</option>
-                                <option>低危</option>
-                            </select><select class="rounded-lg border-gray-300 text-sm">
-                                <option>全部状态</option>
-                                <option>待处理</option>
-                                <option>处理中</option>
-                                <option>已处理</option>
-                            </select>
-                            <div class="relative"><input type="text" placeholder="搜索域名"
-                                                         class="rounded-lg border-gray-300 text-sm pl-8"/><i
-                                        class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <form action="/index/datasafe_list" method="get">
+                            <div class="flex space-x-4">
+                                <select class="rounded-lg border-gray-300 text-sm">
+                                    <option>全部类型</option>
+                                    {volist name="alerts" id="type"}
+                                    <option>{$type.alert_type}</option>
+                                    {/volist}
+                                </select>
+                                <select name="risk_level" class="rounded-lg border-gray-300 text-sm">
+                                    <option value="">全部风险等级</option>
+                                    <option>高危</option>
+                                    <option>中危</option>
+                                    <option>低危</option>
+                                </select>
+
+                                <select name="status"  class="rounded-lg border-gray-300 text-sm">
+                                    <option value="">全部状态</option>
+                                    <option>待处理</option>
+                                    <option>处理中</option>
+                                    <option>已处理</option>
+                                </select>
+                                <div class="relative">
+                                    <input type="text" name="domain" placeholder="搜索域名"
+                                           class="rounded-lg border-gray-300 text-sm pl-8"/>
+                                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                </div>
+                                <div>
+                                    <button type="submit"
+                                            class="w-full bg-custom text-white py-2 text-sm !rounded-button">
+                                        搜索
+                                    </button>
+                                </div>
+
                             </div>
-                        </div>
+                        </form>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">

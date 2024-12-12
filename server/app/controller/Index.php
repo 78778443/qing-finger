@@ -4,14 +4,33 @@ namespace app\controller;
 
 use app\BaseController;
 use think\facade\Db;
+use app\Request;
 use think\facade\View;
 
 class Index extends BaseController
 {
-    public function index()
+    public function index(Request $request)
     {
-        // 查询所有日志数据
-        $logs = Db::table('http_logs')->select();
+        //应用筛选
+        $target_domain = $request->param('target_domain');
+        $source_ip = $request->param('source_ip');
+        $request_time = $request->param('request_time');
+        $request_method = $request->param('request_method');
+        $where = [];
+        if (!empty($target_domain)) {
+            $where['target_domain'] = $target_domain;
+        }
+        if (!empty($source_ip)) {
+            $where['source_ip'] = $source_ip;
+        }
+        if (!empty($request_time)) {
+            $where['request_time'] = $request_time;
+        }
+        if (!empty($request_method)) {
+            $where['request_method'] = $request_method;
+        }
+        $logs = Db::table('http_logs')->where($where)->select();
+
 
         // 查询用于图表的数据
         $chartData = Db::table('http_logs')
@@ -27,6 +46,7 @@ class Index extends BaseController
         return View::fetch();
     }
 
+
     public function detail($id)
     {
         // 根据ID查询详细数据
@@ -36,8 +56,35 @@ class Index extends BaseController
         return json($log);
     }
 
-    public function finger_list()
+    public function finger_list(Request $request)
     {
+        $domain = $request->param('domain');
+//        $source_ip = $request->param('source_ip');
+//        $request_time = $request->param('request_time');
+//        $request_method = $request->param('request_method');
+        $finger_type = $request->param('finger_type');
+        $status = $request->param('status');
+        $where = [];
+        if (!empty($domain)) {
+            $where['domain'] = $domain;
+        }
+        if (!empty($source_ip)) {
+            $where['source_ip'] = $source_ip;
+        }
+        if (!empty($request_time)) {
+            $where['request_time'] = $request_time;
+        }
+        if (!empty($request_method)) {
+            $where['request_method'] = $request_method;
+        }
+        if (!empty($finger_type)) {
+            $where['finger_type'] = $finger_type;
+        }
+        if (!empty($status)) {
+            $where['status'] = $status;
+        }
+
+
         // 总指纹数
         $totalCountSql = Db::table('fingers')->distinct(true)->field('COUNT(DISTINCT finger_id) as count')->buildSql();
         $totalCountResult = Db::query($totalCountSql);
@@ -71,7 +118,7 @@ class Index extends BaseController
 
 
         // 输出指纹列表
-        $fingers = Db::table('fingers')->order('created_at', 'desc')->limit(10)->select();
+        $fingers = Db::table('fingers')->where($where)->order('created_at', 'desc')->limit(10)->select();
         // 将结果传递给视图
         return View::fetch('index/finger_list', [
             'totalCount' => $totalCount,
@@ -103,13 +150,31 @@ class Index extends BaseController
     }
 
 
-    public function datasafe_list()
+    public function datasafe_list(Request $request)
     {
+        $alert_type = $request->param('alert_type');
+        $risk_level = $request->param('risk_level');
+        $status = $request->param('status');
+        $domain = $request->param('domain');
+        $where = [];
+        if (!empty($alert_type)) {
+            $where['alert_type'] = $alert_type;
+        }
+        if (!empty($risk_level)) {
+            $where['risk_level'] = $risk_level;
+        }
+        if (!empty($status)) {
+            $where['status'] = $status;
+        }
+        if (!empty($domain)) {
+            $where['domain'] = $domain;
+        }
         // 使用Db类查询数据
-        $alerts = Db::table('datasafe_alerts')->select();
+        $alerts = Db::table('datasafe_alerts')->where($where)->select();
 
         // 将数据传递给视图
-        return View::fetch('datasafe_list', ['alerts' => $alerts]);
+        return View::fetch('datasafe_list', [
+            'alerts' => $alerts]);
     }
 
 
