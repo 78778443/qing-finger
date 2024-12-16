@@ -22,26 +22,23 @@
                                    placeholder="请输入域名"/>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">请求类型</label>
-                            <div class="relative">
-                                <button class="w-full text-left border border-gray-300 rounded-md px-3 py-2 text-sm bg-white !rounded-button">
-                                    <span>全部</span>
-                                    <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2"></i>
-                                </button>
-                            </div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">指纹类型</label>
+                            <select name="finger_type"
+                                    class="w-full text-left border border-gray-300 rounded-md px-3 py-2 text-sm bg-white !rounded-button">
+                                <option value="">全部</option>
+                                <option value="Nginx">Nginx</option>
+                                <option value="Thinkphp">Thinkphp</option>
+                            </select>
                         </div>
-                        <div><label class="block text-sm font-medium text-gray-700 mb-1">指纹类型</label>
-                            <div class="relative">
-                                <button class="w-full text-left border border-gray-300 rounded-md px-3 py-2 text-sm bg-white !rounded-button">
-                                    <span>全部类型</span><i
-                                            class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div><label class="block text-sm font-medium text-gray-700 mb-1">域名筛选</label>
-                            <input type="text"
-                                   class="w-full border-gray-300 rounded-md text-sm"
-                                   placeholder="请输入域名关键词"/>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">请求状态</label>
+                            <select name="status"
+                                    class="w-full text-left border border-gray-300 rounded-md px-3 py-2 text-sm bg-white !rounded-button">
+                                <option value="">全部</option>
+                                <option value="正常">正常</option>
+                                <option value="异常">异常</option>
+                                <option value="待验证">待验证</option>
+                            </select>
                         </div>
                         <button class="w-full bg-custom text-white py-2 text-sm !rounded-button mt-4">
                             应用筛选
@@ -78,30 +75,6 @@
                                 class="text-lg font-medium">指纹列表</h3>
                     </div>
                     <div class="p-4">
-                        <form action="" method="get">
-                            <div class="flex gap-4 mb-4">
-                                <input type="text" placeholder="搜索指纹ID、名称、特征值..."
-                                       class="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm"/>
-                                <select name="finger_type" class="border border-gray-300 rounded-md px-3 py-2 text-sm">
-                                    <option value="">全部类型</option>
-                                    <option>ThinkPHP</option>
-                                    <option>Nginx</option>
-                                    <option>Apache</option>
-                                </select>
-                                <select name="status" class="border border-gray-300 rounded-md px-3 py-2 text-sm">
-                                    <option value="">全部状态</option>
-                                    <option>正常</option>
-                                    <option>异常</option>
-                                    <option>待验证</option>
-                                </select>
-                                <div>
-                                    <button type="submit"
-                                            class="w-full bg-custom text-white py-2 text-sm !rounded-button">
-                                        搜索
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                             <tr>
@@ -140,20 +113,16 @@
                             {/volist}
                             </tbody>
                         </table>
-                        <div class="flex justify-between items-center mt-4"><p class="text-sm text-gray-700">显示 1 到
-                                10 条，共 53 条</p>
-                            <div class="flex gap-2">
-                                <button class="px-3 py-1 text-sm border border-gray-300 rounded-md disabled:opacity-50">
-                                    上一页
-                                </button>
-                                <button class="px-3 py-1 text-sm border border-gray-300 rounded-md">下一页</button>
-                            </div>
+                        <div class="flex justify-between items-center mt-4">
+                            <p class="text-sm text-gray-700">显示 1 到 10 条，共 {$total} 条</p>
+                            {$fingers|raw}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 <script>
     const chartDom = document.getElementById('trafficChart');

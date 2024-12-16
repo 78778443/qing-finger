@@ -27,7 +27,7 @@
                                     <option>低危</option>
                                 </select>
 
-                                <select name="status"  class="rounded-lg border-gray-300 text-sm">
+                                <select name="status" class="rounded-lg border-gray-300 text-sm">
                                     <option value="">全部状态</option>
                                     <option>待处理</option>
                                     <option>处理中</option>
@@ -40,7 +40,7 @@
                                 </div>
                                 <div>
                                     <button type="submit"
-                                            class="w-full bg-custom text-white py-2 text-sm !rounded-button">
+                                            class="px-4 py-2 text-sm text-white text-gray-700 bg-custom rounded-md hover:bg-blue-600">
                                         搜索
                                     </button>
                                 </div>
@@ -96,6 +96,10 @@
                             {/volist}
                             </tbody>
                         </table>
+                        <div class="flex justify-between items-center mt-4">
+                            <p class="text-sm text-gray-700">显示 1 到 10 条，共 {$count} 条</p>
+                            {$alerts|raw}
+                        </div>
                     </div>
                 </div>
             </div>

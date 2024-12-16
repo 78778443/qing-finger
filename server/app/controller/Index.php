@@ -14,8 +14,9 @@ class Index extends BaseController
         //应用筛选
         $target_domain = $request->param('target_domain');
         $source_ip = $request->param('source_ip');
-        $request_time = $request->param('request_time');
-        $request_method = $request->param('request_method');
+        $start_time = $request->param('start_time');
+        $end_time = $request->param('end_time');
+        $request_type = $request->param('request_type');
         $where = [];
         if (!empty($target_domain)) {
             $where['target_domain'] = $target_domain;
@@ -23,14 +24,16 @@ class Index extends BaseController
         if (!empty($source_ip)) {
             $where['source_ip'] = $source_ip;
         }
-        if (!empty($request_time)) {
-            $where['request_time'] = $request_time;
+        if (!empty($start_time) && !empty($end_time)) {
+            $where[] = ['request_time', '>=', $start_time];
+            $where[] = ['request_time', '<=', $end_time];
         }
-        if (!empty($request_method)) {
-            $where['request_method'] = $request_method;
+        if (!empty($request_type)) {
+            $where['request_type'] = $request_type;
         }
-        $logs = Db::table('http_logs')->where($where)->select();
-
+        $logs = Db::table('http_logs')->where($where)->order('id', 'desc')->paginate(4);
+        $count = Db::table('http_logs')->count();
+//var_dump($logs);exit;
 
         // 查询用于图表的数据
         $chartData = Db::table('http_logs')
@@ -39,9 +42,15 @@ class Index extends BaseController
             ->order("time")
             ->select();
 
+
+        // 根据 request_type 字段去重
+        $result = Db::name('http_logs')->distinct(true)->column('request_type');
+//        var_dump($result);exit;
         // 将数据传递给视图
         View::assign('logs', $logs);
         View::assign('chartData', $chartData);
+        View::assign('results', $result);
+        View::assign('count', $count);
 
         return View::fetch();
     }
@@ -59,23 +68,11 @@ class Index extends BaseController
     public function finger_list(Request $request)
     {
         $domain = $request->param('domain');
-//        $source_ip = $request->param('source_ip');
-//        $request_time = $request->param('request_time');
-//        $request_method = $request->param('request_method');
         $finger_type = $request->param('finger_type');
         $status = $request->param('status');
         $where = [];
         if (!empty($domain)) {
             $where['domain'] = $domain;
-        }
-        if (!empty($source_ip)) {
-            $where['source_ip'] = $source_ip;
-        }
-        if (!empty($request_time)) {
-            $where['request_time'] = $request_time;
-        }
-        if (!empty($request_method)) {
-            $where['request_method'] = $request_method;
         }
         if (!empty($finger_type)) {
             $where['finger_type'] = $finger_type;
@@ -83,7 +80,6 @@ class Index extends BaseController
         if (!empty($status)) {
             $where['status'] = $status;
         }
-
 
         // 总指纹数
         $totalCountSql = Db::table('fingers')->distinct(true)->field('COUNT(DISTINCT finger_id) as count')->buildSql();
@@ -104,7 +100,6 @@ class Index extends BaseController
         // 计算总指纹数较昨日新增的数量
         $totalDifference = $totalCount - $yesterdayCount;
 
-
         // 今日新增
         $today = date('Y-m-d');
         $count = Db::table('fingers')->whereTime('created_at', 'today')->count();
@@ -115,17 +110,19 @@ class Index extends BaseController
             ->count();
         // 计算今日新增与昨日新增的差值
         $difference = $count - $yesterdayCount;
-
+        $total = Db::name('fingers')->count();
 
         // 输出指纹列表
-        $fingers = Db::table('fingers')->where($where)->order('created_at', 'desc')->limit(10)->select();
+        $fingers = Db::table('fingers')->where($where)->order('id', 'desc')->paginate(10);
+//        var_dump($fingers);exit;
         // 将结果传递给视图
         return View::fetch('index/finger_list', [
             'totalCount' => $totalCount,
             'totalDifference' => $totalDifference,
             'fingers' => $fingers,
             "count" => $count,
-            'difference' => $difference
+            'difference' => $difference,
+            'total' => $total
         ]);
     }
 
@@ -170,11 +167,13 @@ class Index extends BaseController
             $where['domain'] = $domain;
         }
         // 使用Db类查询数据
-        $alerts = Db::table('datasafe_alerts')->where($where)->select();
+        $alerts = Db::table('datasafe_alerts')->where($where)->order('id', 'desc')->paginate(4);
+        $count = Db::table('datasafe_alerts')->count();
 
         // 将数据传递给视图
         return View::fetch('datasafe_list', [
-            'alerts' => $alerts]);
+            'alerts' => $alerts,
+            'count' => $count]);
     }
 
 
