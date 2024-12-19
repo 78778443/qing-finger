@@ -103,28 +103,43 @@
                             </tbody>
                         </table>
 
+
                     </div>
 
                     <div id="details-panel" class="border-t border-gray-200 p-4">
                         <h4 class="text-lg font-medium mb-4">记录详情</h4>
                         <div class="grid grid-cols-2 gap-4">
-                            <div><p class="text-sm text-gray-500">请求时间</p>
-                                <p class="text-sm font-medium" id="detail-request-time"></p></div>
-                            <div><p class="text-sm text-gray-500">源IP地址</p>
-                                <p class="text-sm font-medium" id="detail-source-ip"></p></div>
-                            <div><p class="text-sm text-gray-500">目标域名</p>
-                                <p class="text-sm font-medium" id="detail-target-domain"></p></div>
-                            <div><p class="text-sm text-gray-500">请求类型</p>
-                                <p class="text-sm font-medium" id="detail-request-type"></p></div>
-                            <div><p class="text-sm text-gray-500">状态码</p>
-                                <p class="text-sm font-medium" id="detail-status-code"></p></div>
-                            <div><p class="text-sm text-gray-500">响应大小</p>
-                                <p class="text-sm font-medium" id="detail-response-size"></p></div>
-                            <div class="col-span-2"><p class="text-sm text-gray-500">请求头</p>
+                            <div>
+                                <p class="text-sm text-gray-500">请求时间</p>
+                                <p class="text-sm font-medium" id="detail-request-time"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">源IP地址</p>
+                                <p class="text-sm font-medium" id="detail-source-ip"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">目标域名</p>
+                                <p class="text-sm font-medium" id="detail-target-domain"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">请求类型</p>
+                                <p class="text-sm font-medium" id="detail-request-type"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">状态码</p>
+                                <p class="text-sm font-medium" id="detail-status-code"></p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">响应大小</p>
+                                <p class="text-sm font-medium" id="detail-response-size"></p>
+                            </div>
+                            <div class="col-span-2">
+                                <p class="text-sm text-gray-500">请求头</p>
                                 <pre class="mt-1 text-sm bg-gray-50 p-2 rounded" id="detail-request-header"></pre>
                             </div>
-                            <div class="col-span-2"><p class="text-sm text-gray-500">响应头</p>
-                                <pre class="mt-1 text-sm bg-gray-50 p-2 rounded" id="detail-response-header"></pre>
+                            <div class="col-span-2">
+                                <p class="text-sm text-gray-500">响应头</p>
+                                <pre class="mt-1 text-sm bg-gray-50 p-2 rounded" id="response"></pre>
                             </div>
                         </div>
                     </div>
