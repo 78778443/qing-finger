@@ -1,0 +1,245 @@
+{
+  "log": {
+    "version": "1.2",
+    "creator": {
+      "name": "Reqable",
+      "version": "2.30.3"
+    },
+    "entries": [
+      {
+        "startedDateTime": "2024-12-24T03:14:50.385Z",
+        "time": 275,
+        "request": {
+          "method": "POST",
+          "url": "https:\/\/mcs.doubao.com\/list",
+          "httpVersion": "HTTP\/2.0",
+          "cookies": [],
+          "headers": [
+            {
+              "name": ":authority",
+              "value": "mcs.doubao.com"
+            },
+            {
+              "name": ":method",
+              "value": "POST"
+            },
+            {
+              "name": ":path",
+              "value": "\/list"
+            },
+            {
+              "name": ":scheme",
+              "value": "https"
+            },
+            {
+              "name": "content-length",
+              "value": "2777"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"Windows\""
+            },
+            {
+              "name": "user-agent",
+              "value": "Mozilla\/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit\/537.36 (KHTML, like Gecko) Chrome\/131.0.0.0 Safari\/537.36 Edg\/131.0.0.0"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Microsoft Edge\";v=\"131\", \"Chromium\";v=\"131\", \"Not_A Brand\";v=\"24\""
+            },
+            {
+              "name": "content-type",
+              "value": "application\/json; charset=UTF-8"
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "accept",
+              "value": "*\/*"
+            },
+            {
+              "name": "origin",
+              "value": "https:\/\/www.doubao.com"
+            },
+            {
+              "name": "sec-fetch-site",
+              "value": "same-site"
+            },
+            {
+              "name": "sec-fetch-mode",
+              "value": "cors"
+            },
+            {
+              "name": "sec-fetch-dest",
+              "value": "empty"
+            },
+            {
+              "name": "referer",
+              "value": "https:\/\/www.doubao.com\/"
+            },
+            {
+              "name": "accept-encoding",
+              "value": "gzip, deflate, br, zstd"
+            },
+            {
+              "name": "accept-language",
+              "value": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+            },
+            {
+              "name": "priority",
+              "value": "u=1, i"
+            }
+          ],
+          "queryString": [],
+          "postData": {
+            "mimeType": "application\/json",
+            "text": "[{\"events\":[{\"event\":\"predefine_pageview_all\",\"params\":\"{\\\"_staging_flag\\\":0,\\\"email\\\":null,\\\"env\\\":\\\"PROD\\\",\\\"region\\\":\\\"cn\\\",\\\"isDevMode\\\":false,\\\"isReleaseVersion\\\":true,\\\"scmVersion\\\":\\\"1.0.1.2766\\\",\\\"init_id\\\":\\\"1734915405286_null\\\",\\\"os\\\":\\\"web\\\",\\\"os_name\\\":\\\"web\\\",\\\"web_device\\\":\\\"windows\\\",\\\"inner_region\\\":\\\"CN\\\",\\\"screen_width\\\":1230,\\\"screen_height\\\":726,\\\"landing_page_url\\\":\\\"https:\/\/www.doubao.com\/chat\/\\\",\\\"app_id\\\":482431,\\\"biz_user_id\\\":\\\"4431450795425578\\\",\\\"current_page\\\":\\\"chat\\\",\\\"previous_page\\\":\\\"chat\\\",\\\"event_index\\\":1734916099160,\\\"event_name\\\":\\\"predefine_pageview_all\\\",\\\"event_ts\\\":1735010090,\\\"growth_deepevent\\\":\\\"4\\\",\\\"url\\\":\\\"https:\/\/www.doubao.com\/chat\/591822819546370\\\",\\\"url_path\\\":\\\"\/chat\/591822819546370\\\"}\",\"local_time_ms\":1735010090287,\"is_bav\":0,\"ab_sdk_version\":\"90132584,90127854,90126811,90168264,10763663,11120531,90350805\",\"session_id\":\"9edb3c82-6c5c-49d2-8446-4b185aa11d45\"},{\"event\":\"page_launch\",\"params\":\"{\\\"_staging_flag\\\":0,\\\"email\\\":null,\\\"env\\\":\\\"PROD\\\",\\\"region\\\":\\\"cn\\\",\\\"isDevMode\\\":false,\\\"isReleaseVersion\\\":true,\\\"scmVersion\\\":\\\"1.0.1.2766\\\",\\\"init_id\\\":\\\"1734915405286_null\\\",\\\"os\\\":\\\"web\\\",\\\"os_name\\\":\\\"web\\\",\\\"web_device\\\":\\\"windows\\\",\\\"inner_region\\\":\\\"CN\\\",\\\"screen_width\\\":1230,\\\"screen_height\\\":726,\\\"landing_page_url\\\":\\\"https:\/\/www.doubao.com\/chat\/\\\",\\\"app_id\\\":482431,\\\"biz_user_id\\\":\\\"4431450795425578\\\",\\\"current_page\\\":\\\"chat\\\",\\\"previous_page\\\":\\\"chat\\\",\\\"event_index\\\":1734916099159,\\\"event_name\\\":\\\"page_launch\\\",\\\"event_ts\\\":1735010090,\\\"growth_deepevent\\\":\\\"4\\\",\\\"url\\\":\\\"https:\/\/www.doubao.com\/chat\/591822819546370\\\",\\\"url_path\\\":\\\"\/chat\/591822819546370\\\"}\",\"local_time_ms\":1735010090287,\"is_bav\":0,\"ab_sdk_version\":\"90132584,90127854,90126811,90168264,10763663,11120531,90350805\",\"session_id\":\"9edb3c82-6c5c-49d2-8446-4b185aa11d45\"}],\"user\":{\"user_unique_id\":\"7428874083762914842\",\"user_id\":\"4431450795425578\",\"user_is_login\":true,\"web_id\":\"7428874083762914842\"},\"header\":{\"app_id\":497858,\"os_name\":\"windows\",\"os_version\":\"10\",\"device_model\":\"Windows NT 10.0\",\"language\":\"zh-CN\",\"platform\":\"web\",\"sdk_version\":\"5.1.1_safe\",\"sdk_lib\":\"js\",\"timezone\":8,\"tz_offset\":-28800,\"resolution\":\"1536x864\",\"browser\":\"Chrome\",\"browser_version\":\"131.0.0.0\",\"referrer\":\"https:\/\/www.doubao.com\/chat\/local_2181762442349719?type=2\",\"referrer_host\":\"\",\"width\":1536,\"height\":864,\"screen_width\":1536,\"screen_height\":864,\"utm_source\":\"\",\"tracer_data\":\"{\\\"$utm_from_url\\\":1}\",\"custom\":\"{\\\"samantha_version_client\\\":\\\"\\\",\\\"is_test_env\\\":0,\\\"is_samantha_client\\\":\\\"0\\\",\\\"scm_version\\\":\\\"1.0.1.2766\\\",\\\"is_pwa\\\":\\\"0\\\",\\\"samantha_web\\\":\\\"1\\\",\\\"prefers_color_scheme\\\":\\\"light\\\",\\\"ug_landing_url\\\":\\\"https:\/\/www.doubao.com\/chat\/\\\",\\\"from_source\\\":\\\"other\\\",\\\"op_tracking_id\\\":null}\"},\"local_time\":1735010090,\"verbose\":1}]"
+          },
+          "headersSize": 690,
+          "bodySize": 2777,
+          "_status": "completed",
+          "_startTimestamp": 1735010090385619,
+          "_endTimestamp": 1735010090431166
+        },
+        "response": {
+          "status": 200,
+          "statusText": "",
+          "httpVersion": "HTTP\/2.0",
+          "cookies": [],
+          "headers": [
+            {
+              "name": ":status",
+              "value": "200"
+            },
+            {
+              "name": "server",
+              "value": "volc-dcdn"
+            },
+            {
+              "name": "content-type",
+              "value": "application\/json; charset=utf-8"
+            },
+            {
+              "name": "content-length",
+              "value": "21"
+            },
+            {
+              "name": "date",
+              "value": "Tue, 24 Dec 2024 03:14:50 GMT"
+            },
+            {
+              "name": "x-tt-logid",
+              "value": "202412241114509D4C305BD74364155573"
+            },
+            {
+              "name": "access-control-allow-origin",
+              "value": "https:\/\/www.doubao.com"
+            },
+            {
+              "name": "access-control-max-age",
+              "value": "1800"
+            },
+            {
+              "name": "access-control-allow-credentials",
+              "value": "true"
+            },
+            {
+              "name": "access-control-allow-methods",
+              "value": "GET, OPTIONS, HEAD, PUT, POST"
+            },
+            {
+              "name": "cross-origin-resource-policy",
+              "value": "cross-origin"
+            },
+            {
+              "name": "cache-control",
+              "value": "no-store, no-cache, must-revalidate"
+            },
+            {
+              "name": "pragma",
+              "value": "no-cache"
+            },
+            {
+              "name": "expires",
+              "value": "0"
+            },
+            {
+              "name": "strict-transport-security",
+              "value": "max-age=31536000; includeSubDomains"
+            },
+            {
+              "name": "server-timing",
+              "value": "inner; dur=7, cdn-cache;desc=MISS, origin;dur=33, edge;dur=0"
+            },
+            {
+              "name": "x-tt-trace-host",
+              "value": "011527832e0d0a62a8d4e986f601a601211dee196502dacc8b2babd0f6cd69de0a71a8505b95fa2d9e951dd0efadbebce3fdb6c37785d4cf18e52f9e2a467ff2e872c0f0842e6c469dfc7c7db244304accb9f9e1ffcdabf9fb1db3b5eb9dd5906d"
+            },
+            {
+              "name": "x-tt-trace-tag",
+              "value": "id=5"
+            },
+            {
+              "name": "x-tt-trace-id",
+              "value": "00-f6a8fe7703010062502243ff6bd40000-f6a8fe7703010062-01"
+            },
+            {
+              "name": "x-tt-timestamp",
+              "value": "1735010090.232"
+            },
+            {
+              "name": "via",
+              "value": "n157-089-041.njmpcm.Creative"
+            },
+            {
+              "name": "x-request-ip",
+              "value": "223.160.230.96"
+            },
+            {
+              "name": "x-dsa-trace-id",
+              "value": "1735010090d9a083b35e99ac98e4054eafd86cab28"
+            },
+            {
+              "name": "x-dsa-origin-status",
+              "value": "200"
+            }
+          ],
+          "content": {
+            "size": 21,
+            "mimeType": "application\/json",
+            "text": "{\"e\":0,\"sc\":2,\"tc\":2}"
+          },
+          "redirectURL": "",
+          "headersSize": 1126,
+          "bodySize": 21,
+          "_status": "completed",
+          "_startTimestamp": 1735010090657733,
+          "_endTimestamp": 1735010090660329
+        },
+        "cache": [],
+        "timings": {
+          "send": -1,
+          "wait": -1,
+          "receive": -1
+        },
+        "serverIPAddress": "36.154.114.162",
+        "connection": "1351",
+        "comment": "",
+        "_id": 154,
+        "_uid": "c3008737-6c20-430a-bb9d-75c0d1745aa1",
+        "_cid": 1351,
+        "_ctime": 1735009597491,
+        "_sid": 99,
+        "_stime": 1735010090385,
+        "_serverAddress": "36.154.114.162",
+        "_serverAddressFamily": 0,
+        "_serverPort": 443,
+        "_clientAddress": "127.0.0.1",
+        "_clientAddressFamily": 0,
+        "_clientPort": 48374
+      }
+    ]
+  }
+},
