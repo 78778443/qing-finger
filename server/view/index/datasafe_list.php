@@ -26,14 +26,9 @@
                                     <option>全部类型</option>
                                     <option></option>
                                 </select>
-                                <select name="risk_level" class="rounded-lg border-gray-300 text-sm">
-                                    <option value="">全部风险等级</option>
-                                    <option>高危</option>
-                                    <option>中危</option>
-                                    <option>低危</option>
-                                </select>
 
-                                <select name="status" class="rounded-lg border-gray-300 text-sm">
+
+                                <select name="" class="rounded-lg border-gray-300 text-sm">
                                     <option value="">全部状态</option>
                                     <option>待处理</option>
                                     <option>处理中</option>

@@ -160,6 +160,8 @@ class Index extends BaseController
     public function datasafe_list(Request $request)
     {
         $domain = $request->param();
+        var_dump($domain);
+//        exit;
         //查询对应域名下的所有数据
         $detail = Db::table('datasafe_alerts')
             ->where($domain)
