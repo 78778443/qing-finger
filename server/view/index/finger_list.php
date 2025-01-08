@@ -1,7 +1,29 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-    {include file="common/head" /}
+    <title>指纹中心</title
+            {include file="common/head" /}
+    <script type="text/javascript">
+        function toggleDetails(rowId) {
+            var details = document.getElementById('details-' + rowId);
+            if (details.style.display === 'none') {
+                details.style.display = 'table-row';
+            } else {
+                details.style.display = 'none';
+            }
+        }
+    </script>
+    <style>
+        .hidden {
+            display: none;
+        }
+        .pagination {
+            display: flex;
+            gap: 0.5rem; /* 调整分页链接之间的间距 */
+            padding: 0.5rem;
+        }
+    </style>
+
 </head>
 <body>
 <div class="min-h-screen bg-gray-50">
@@ -47,6 +69,8 @@
                 </form>
             </div>
             <div class="flex-1 space-y-6">
+
+                <!--四个数据展示框-->
                 <div class="grid grid-cols-4 gap-4 mb-6">
                     <div class="bg-white p-4 rounded-lg shadow">
                         <h3 class="text-lg font-medium text-gray-900">总指纹数</h3>
@@ -70,52 +94,57 @@
                         <p class="text-sm text-gray-500 mt-1">较昨日 -12</p>
                     </div>
                 </div>
+                <!--列表框-->
                 <div class="bg-white rounded-lg shadow">
                     <div class="px-4 py-3 border-b border-gray-200 flex justify-between items-center"><h3
                                 class="text-lg font-medium">指纹列表</h3>
                     </div>
                     <div class="p-4">
+
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">序号</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">指纹ID</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">域名</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">指纹类型
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">指纹名称
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">状态</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">创建时间
-                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">描述</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">操作</th>
                             </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
                             {volist name="fingers" id="finger"}
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 text-sm text-gray-900">{$finger.id}</td>
-                                <td class="px-6 py-4 text-sm text-gray-900">{$finger.finger_id}</td>
-                                <td class="px-6 py-4 text-sm text-gray-900">{$finger.domain}</td>
-                                <td class="px-6 py-4 text-sm text-gray-900">{$finger.finger_type}</td>
-                                <td class="px-6 py-4 text-sm">
-                                    {switch name="finger.status"}{case value="正常"}
-                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">正常</span>
-                                    {/case} {case value="待验证"}
-                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">待验证</span>
-                                    {/case} {case value="异常"}
-                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">异常</span>
-                                    {/case}{/switch}
+                            <!--                            <td >展开</td>-->
+                            <td class="px-6 py-4 text-sm text-gray-900">{$finger.finger_id}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">{$finger.domain}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">{$finger.name}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900">{$finger.description}</td>
+                            <td onclick="toggleDetails({$key})" class="px-6 py-4 text-sm">
+                                <button class="w-full bg-custom text-white py-2 text-sm !rounded-button mt-4">
+                                    双击查看
+                                </button></td>
+                            <tr id="details-{$key}" class="hidden">
+                                <td colspan="8">
+                                    <h6>URL：{$finger.domain}</h6>
+                                    <h6>指纹名称：{$finger.name}</h6>
+                                    <h6>版本：{$finger.version}</h6>
+                                    <h6>操作系统：{$finger.OS}</h6>
+                                    <h6>服务器：{$finger.servicer}</h6>
+                                    <h6>编程语言：{$finger.language}</h6>
+                                    <h6>数据库：{$finger.DBA}</h6>
+                                    <h6>创建时间：{$finger.created_at}</h6>
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-900">{$finger.created_at}</td>
-                                <td class="px-6 py-4 text-sm">
-                                    <a href="{:url('detail', ['id' => $finger.id])}"
-                                       class="text-custom hover:underline">查看</a></td>
                             </tr>
+
                             {/volist}
                             </tbody>
+
+
                         </table>
+
                         <div class="flex justify-between items-center mt-4">
-                            <p class="text-sm text-gray-700">显示 1 到 10 条，共 {$total} 条</p>
-                            {$fingers|raw}
+                            <p class="text-sm text-gray-700">显示 1 到 10 条，共 {$tiaoshu} 条</p>
+                            <div class="pagination">{$fingers|raw}</div>
                         </div>
                     </div>
                 </div>

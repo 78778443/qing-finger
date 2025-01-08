@@ -3,8 +3,8 @@
 namespace app\controller;
 
 use app\BaseController;
-use think\facade\Db;
 use app\Request;
+use think\facade\Db;
 use think\facade\View;
 
 class Index extends BaseController
@@ -12,14 +12,14 @@ class Index extends BaseController
     public function index(Request $request)
     {
         //应用筛选
-        $target_domain = $request->param('target_domain');
+        $domain = $request->param('domain');
         $source_ip = $request->param('source_ip');
         $start_time = $request->param('start_time');
         $end_time = $request->param('end_time');
-        $request_type = $request->param('request_type');
+        $methond = $request->param('methond');
         $where = [];
-        if (!empty($target_domain)) {
-            $where['target_domain'] = $target_domain;
+        if (!empty($domain)) {
+            $where['domain'] = $domain;
         }
         if (!empty($source_ip)) {
             $where['source_ip'] = $source_ip;
@@ -28,11 +28,11 @@ class Index extends BaseController
             $where[] = ['request_time', '>=', $start_time];
             $where[] = ['request_time', '<=', $end_time];
         }
-        if (!empty($request_type)) {
-            $where['request_type'] = $request_type;
+        if (!empty($methond)) {
+            $where['methond'] = $methond;
         }
         $logs = Db::table('http_logs')->where($where)->order('id', 'desc')->paginate(4);
-        $count = Db::table('http_logs')->count();
+        $count = $logs->total();
 //var_dump($logs);exit;
 
         // 查询用于图表的数据
@@ -43,8 +43,8 @@ class Index extends BaseController
             ->select();
 
 
-        // 根据 request_type 字段去重
-        $result = Db::name('http_logs')->distinct(true)->column('request_type');
+        // 根据 methond 字段去重
+        $result = Db::name('http_logs')->distinct(true)->column('methond');
 //        var_dump($result);exit;
         // 将数据传递给视图
         View::assign('logs', $logs);
@@ -67,19 +67,7 @@ class Index extends BaseController
 
     public function finger_list(Request $request)
     {
-        $domain = $request->param('domain');
-        $finger_type = $request->param('finger_type');
-        $status = $request->param('status');
-        $where = [];
-        if (!empty($domain)) {
-            $where['domain'] = $domain;
-        }
-        if (!empty($finger_type)) {
-            $where['finger_type'] = $finger_type;
-        }
-        if (!empty($status)) {
-            $where['status'] = $status;
-        }
+
 
         // 总指纹数
         $totalCountSql = Db::table('fingers')->distinct(true)->field('COUNT(DISTINCT finger_id) as count')->buildSql();
@@ -110,11 +98,26 @@ class Index extends BaseController
             ->count();
         // 计算今日新增与昨日新增的差值
         $difference = $count - $yesterdayCount;
-        $total = Db::name('fingers')->count();
+        $total = Db::name('fingers');
 
+
+        $domain = $request->param('domain');
+        $finger_type = $request->param('finger_type');
+        $status = $request->param('status');
+        $where = [];
+        if (!empty($domain)) {
+            $where['domain'] = $domain;
+        }
+        if (!empty($finger_type)) {
+            $where['finger_type'] = $finger_type;
+        }
+        if (!empty($status)) {
+            $where['status'] = $status;
+        }
         // 输出指纹列表
         $fingers = Db::table('fingers')->where($where)->order('id', 'desc')->paginate(10);
-//        var_dump($fingers);exit;
+        $tiaoshu = $fingers->total();
+
         // 将结果传递给视图
         return View::fetch('index/finger_list', [
             'totalCount' => $totalCount,
@@ -122,7 +125,8 @@ class Index extends BaseController
             'fingers' => $fingers,
             "count" => $count,
             'difference' => $difference,
-            'total' => $total
+            'total' => $total,
+            'tiaoshu' => $tiaoshu,
         ]);
     }
 
@@ -146,35 +150,66 @@ class Index extends BaseController
         return View::fetch();
     }
 
+    public function test()
+    {
+        // 使用视图输出过滤
+        return View::fetch();
+    }
+
 
     public function datasafe_list(Request $request)
     {
-        $alert_type = $request->param('alert_type');
-        $risk_level = $request->param('risk_level');
-        $status = $request->param('status');
-        $domain = $request->param('domain');
-        $where = [];
-        if (!empty($alert_type)) {
-            $where['alert_type'] = $alert_type;
+        $domain = $request->param();
+        //查询对应域名下的所有数据
+        $detail = Db::table('datasafe_alerts')
+            ->where($domain)
+            ->select()
+            ->toArray();
+//        var_dump($detail);
+
+
+        $alertsObj = Db::table('datasafe_alerts')
+            ->field('domain, GROUP_CONCAT(id) as ids') // 获取域名和关联ID
+            ->group('domain') // 按照域名分组
+            ->paginate(5); // 执行查询
+
+        //将对象转换为数组
+        $alerts = $alertsObj->items();
+        // 查询总数据条数
+        $count = $alertsObj->total();
+
+//        var_dump($alertsObj);
+        $alertDetails = [];
+        foreach ($alerts as &$alert) {
+            $domain = $alert['domain'];
+            $alert['erji'] = Db::table('datasafe_alerts')->where('domain', $domain)->select()->toArray();
+            foreach ($alert['erji'] as &$erji) {
+//                var_dump($erji['http_id']);
+                $http_id = Db::table('http_logs')->where('id', $erji['http_id'])->select()->toArray();
+                $erji['http_id'] = $http_id;
+            }
         }
-        if (!empty($risk_level)) {
-            $where['risk_level'] = $risk_level;
-        }
-        if (!empty($status)) {
-            $where['status'] = $status;
-        }
-        if (!empty($domain)) {
-            $where['domain'] = $domain;
-        }
-        // 使用Db类查询数据
-        $alerts = Db::table('datasafe_alerts')->where($where)->order('id', 'desc')->paginate(4);
-        $count = Db::table('datasafe_alerts')->count();
+//        var_dump($alerts);
 
         // 将数据传递给视图
         return View::fetch('datasafe_list', [
-            'alerts' => $alerts,
-            'count' => $count]);
+            'alert_type' => $alerts,
+            'alert_details' => $alertDetails,
+            'alerts' => $alertsObj,
+            'detail' => $detail,
+            'count' => $count
+        ]);
     }
+
+    public function datasafe_detail($id)
+    {
+        // 根据ID查询详细数据
+        $log = Db::table('http_logs')->where('id', $id)->find();
+
+        // 返回JSON格式的数据
+        return json($log);
+    }
+
 
 
 }

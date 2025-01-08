@@ -1,7 +1,15 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-    {include file="common/head" /}
+    <title>数据安全</title
+            {include file="common/head" /}
+    <style>
+        .pagination {
+            display: flex;
+            gap: 0.5rem; /* 调整分页链接之间的间距 */
+            padding: 0.5rem;
+        }
+    </style>
 </head>
 <body>
 <div class="min-h-screen bg-gray-50">
@@ -16,9 +24,7 @@
                             <div class="flex space-x-4">
                                 <select class="rounded-lg border-gray-300 text-sm">
                                     <option>全部类型</option>
-                                    {volist name="alerts" id="type"}
-                                    <option>{$type.alert_type}</option>
-                                    {/volist}
+                                    <option></option>
                                 </select>
                                 <select name="risk_level" class="rounded-lg border-gray-300 text-sm">
                                     <option value="">全部风险等级</option>
@@ -52,15 +58,15 @@
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    时间
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    告警类型
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    风险等级
-                                </th>
+                                <!--                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">-->
+                                <!--                                    流量ID-->
+                                <!--                                </th>-->
+                                <!--                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">-->
+                                <!--                                    告警类型-->
+                                <!--                                </th>-->
+                                <!--                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">-->
+                                <!--                                    风险等级-->
+                                <!--                                </th>-->
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     域名
                                 </th>
@@ -68,7 +74,7 @@
                                     详情
                                 </th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    状态
+                                    时间
                                 </th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     操作
@@ -76,29 +82,41 @@
                             </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                            {volist name="alerts" id="alert"}
+                            {volist name="alert_type" id="alert"}
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{$alert.alert_time}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{$alert.alert_type}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">{$alert.risk_level}</span>
-                                </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{$alert.domain}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{$alert.details}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">{$alert.status}</span>
+                                {volist name="alert['erji']" id="erji"}
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <div id="{$alert.domain}">
+                                        <pre><code>{$erji.data}</code></pre>
+                                        {volist name="erji['http_id']" id="http_id"}
+                                        <a href="{:URL('datasafe_detail', ['id' => $http_id.id])}"
+                                           class="text-custom hover:text-custom-dark">
+                                            查看详情
+                                        </a>
+                                        {/volist}
+                                    </div>
                                 </td>
+                                {/volist}
+<!--                                <td class="px-6 py-4 whitespace-nowrap">-->
+<!---->
+<!--                                </td>-->
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">{$erji.alert_time}</span>
+                                </td>
+
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     <button class="text-custom hover:text-blue-700 mr-3">处理</button>
                                     <button class="text-gray-500 hover:text-gray-700">详情</button>
                                 </td>
                             </tr>
+
                             {/volist}
                             </tbody>
                         </table>
                         <div class="flex justify-between items-center mt-4">
-                            <p class="text-sm text-gray-700">显示 1 到 10 条，共 {$count} 条</p>
-                            {$alerts|raw}
+                            <p class="text-sm text-gray-700">显示 1 到 5 条，共 {$count} 条</p>
+                            <div class="pagination">{$alerts|raw}</div>
                         </div>
                     </div>
                 </div>
@@ -106,6 +124,7 @@
         </div>
     </div>
 </div>
+
 <script>
     const chartDom = document.getElementById('trafficChart');
     const myChart = echarts.init(chartDom);

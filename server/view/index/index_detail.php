@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
+    <title>监控详情</title
     {include file="common/head" /}
 </head>
 <body>

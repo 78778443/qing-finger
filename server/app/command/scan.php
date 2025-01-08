@@ -3,6 +3,7 @@ declare (strict_types=1);
 
 namespace app\command;
 
+use app\controller\Reqable;
 use app\model\aimodel;
 use think\console\Command;
 use think\console\Input;
@@ -23,6 +24,8 @@ class scan extends Command
     {
         // 指令输出
 //        $output->writeln('app\command\scan');
-        aimodel::aimodel();
+//        aimodel::ai();
+        aimodel::mingan_data();
+//        Reqable::test();
     }
 }

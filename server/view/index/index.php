@@ -1,8 +1,29 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-    {include file="common/head" /}
+    <title>流量监控</title
+            {include file="common/head" /}
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <style>
+        .scrollable-pre {
+            /*max-width: 100%;*/
+            /*overflow-x: auto;*/
+            /*white-space: pre-wrap; !* 保留换行符，同时允许自动换行 *!*/
+            /*word-wrap: break-word; !* 允许长单词或 URL 地址换行到下一行 *!*/
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px; /* 根据需要调整宽度 */
+        }
+        .pagination {
+            display: flex;
+            gap: 0.5rem; /* 调整分页链接之间的间距 */
+            padding: 0.5rem;
+        }
+        .content-container {
+            padding: 1rem; /* 增加内容区域的内边距 */
+        }
+    </style>
 </head>
 <body>
 <div class="min-h-screen bg-gray-50">
@@ -89,8 +110,13 @@
                             <tr class="hover:bg-gray-50 cursor-pointer" onclick="showDetails({$log.id})">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{$log.request_time}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{$log.source_ip}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{$log.target_domain}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{$log.request_type}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <!--                                    <pre style="overflow: auto; white-space: pre-wrap;">-->
+                                    <!--                                        <label><textarea></textarea></label></pre>-->
+                                    <pre class="scrollable-pre"><code> <span title="{$log.domain}">{$log.domain}</span></code></pre>
+
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{$log.methond}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{$log.status_code}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm">
                                     <a href="{:URL('detail', ['id' => $log.id])}"
@@ -144,8 +170,8 @@
                         </div>
                     </div>
                     <div class="flex justify-between items-center mt-4">
-                        <p class="text-sm text-gray-700">显示 1 到 5 条，共 {$count} 条</p>
-                        {$logs|raw}
+                        <p class="text-sm text-gray-700">   显示 1 到 5 条，共 {$count} 条</p>
+                        <div class="pagination">{$logs|raw}</div>
                     </div>
                 </div>
             </div>

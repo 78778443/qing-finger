@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
+    <系统设置>
     {include file="common/head" /}
 </head>
 <body>
