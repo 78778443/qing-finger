@@ -17,6 +17,7 @@
         .hidden {
             display: none;
         }
+
         .pagination {
             display: flex;
             gap: 0.5rem; /* 调整分页链接之间的间距 */
@@ -84,7 +85,7 @@
                         <p class="text-sm text-gray-500 mt-1">较昨日 {if $difference >= 0}+{/if}{$difference}</p>
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow">
-                        <h3 class="text-lg font-medium text-gray-900">识别准确率</h3>
+                        <h3 class="text-lg font-medium text-gray-900">总域名数</h3>
                         <p class="mt-2 text-3xl font-semibold text-blue-500">98.5%</p>
                         <p class="text-sm text-gray-500 mt-1">较昨日 +0.5%</p>
                     </div>
@@ -114,7 +115,6 @@
                             </thead>
                             <tbody class="divide-y divide-gray-200">
                             {volist name="fingers" id="finger"}
-                            <!--                            <td >展开</td>-->
                             <td class="px-6 py-4 text-sm text-gray-900">{$finger.finger_id}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">{$finger.domain}</td>
                             <td class="px-6 py-4 text-sm text-gray-900">{$finger.name}</td>
@@ -122,26 +122,21 @@
                             <td onclick="toggleDetails({$key})" class="px-6 py-4 text-sm">
                                 <button class="w-full bg-custom text-white py-2 text-sm !rounded-button mt-4">
                                     双击查看
-                                </button></td>
+                                </button>
+                            </td>
                             <tr id="details-{$key}" class="hidden">
                                 <td colspan="8">
                                     <h6>URL：{$finger.domain}</h6>
                                     <h6>指纹名称：{$finger.name}</h6>
                                     <h6>版本：{$finger.version}</h6>
-                                    <h6>操作系统：{$finger.OS}</h6>
                                     <h6>服务器：{$finger.servicer}</h6>
                                     <h6>编程语言：{$finger.language}</h6>
-                                    <h6>数据库：{$finger.DBA}</h6>
                                     <h6>创建时间：{$finger.created_at}</h6>
                                 </td>
                             </tr>
-
                             {/volist}
                             </tbody>
-
-
                         </table>
-
                         <div class="flex justify-between items-center mt-4">
                             <p class="text-sm text-gray-700">显示 1 到 10 条，共 {$tiaoshu} 条</p>
                             <div class="pagination">{$fingers|raw}</div>

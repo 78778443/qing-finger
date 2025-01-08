@@ -45,7 +45,8 @@ class Index extends BaseController
 
         // 根据 methond 字段去重
         $result = Db::name('http_logs')->distinct(true)->column('methond');
-//        var_dump($result);exit;
+//        var_dump($logs);
+//exit;
         // 将数据传递给视图
         View::assign('logs', $logs);
         View::assign('chartData', $chartData);
@@ -160,8 +161,6 @@ class Index extends BaseController
     public function datasafe_list(Request $request)
     {
         $domain = $request->param();
-        var_dump($domain);
-//        exit;
         //查询对应域名下的所有数据
         $detail = Db::table('datasafe_alerts')
             ->where($domain)
@@ -169,18 +168,22 @@ class Index extends BaseController
             ->toArray();
 //        var_dump($detail);
 
-
-        $alertsObj = Db::table('datasafe_alerts')
+        $alerts = Db::table('datasafe_alerts')
             ->field('domain, GROUP_CONCAT(id) as ids') // 获取域名和关联ID
             ->group('domain') // 按照域名分组
-            ->paginate(5); // 执行查询
+            ->where($domain) // 应用查询条件
+            ->paginate(5)  //分页设置
+            ->items(); // 将对象转换为数组
 
-        //将对象转换为数组
-        $alerts = $alertsObj->items();
+var_dump($alerts);
+        //
+//        $alerts = $alertsObj->items();
         // 查询总数据条数
-        $count = $alertsObj->total();
+//        $count = $alerts->total();
 
-//        var_dump($alertsObj);
+//        $alertsObj = json_encode($alerts);
+//        var_dump($alerts);
+
         $alertDetails = [];
         foreach ($alerts as &$alert) {
             $domain = $alert['domain'];
@@ -197,9 +200,9 @@ class Index extends BaseController
         return View::fetch('datasafe_list', [
             'alert_type' => $alerts,
             'alert_details' => $alertDetails,
-            'alerts' => $alertsObj,
+//            'alerts' => $alertsObj,
             'detail' => $detail,
-            'count' => $count
+//            'count' => $count
         ]);
     }
 
@@ -211,7 +214,6 @@ class Index extends BaseController
         // 返回JSON格式的数据
         return json($log);
     }
-
 
 
 }
