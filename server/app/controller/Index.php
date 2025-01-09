@@ -11,7 +11,7 @@ class Index extends BaseController
 {
     public function index(Request $request)
     {
-        //应用筛选
+        // 应用筛选
         $domain = $request->param('domain');
         $source_ip = $request->param('source_ip');
         $start_time = $request->param('start_time');
@@ -31,7 +31,7 @@ class Index extends BaseController
         if (!empty($methond)) {
             $where['methond'] = $methond;
         }
-        $logs = Db::table('http_logs')->where($where)->order('id', 'desc')->paginate(4);
+        $logs = Db::table('http_logs')->where($where)->order('id', 'desc')->paginate(['query' => $request->param(), 'list_rows' => 10]);
         $count = $logs->total();
 //var_dump($logs);exit;
 
@@ -157,8 +157,17 @@ class Index extends BaseController
         return View::fetch();
     }
 
-
     public function datasafe_list(Request $request)
+    {
+        $detail = Db::table('domains')->select()->toArray();
+//        var_dump($detail);
+//        exit;
+        return view('datasafe_list', [
+            'detail' => $detail]);
+
+    }
+
+    public function datasafe_list_beak(Request $request)
     {
         $domain = $request->param();
         //查询对应域名下的所有数据
@@ -168,24 +177,30 @@ class Index extends BaseController
             ->toArray();
 //        var_dump($detail);
 
-        $alerts = Db::table('datasafe_alerts')
+        $alertsObj = Db::table('datasafe_alerts')
             ->field('domain, GROUP_CONCAT(id) as ids') // 获取域名和关联ID
             ->group('domain') // 按照域名分组
             ->where($domain) // 应用查询条件
-            ->paginate(5)  //分页设置
-            ->items(); // 将对象转换为数组
+            ->paginate(5); // 将对象转换为数组
 
-var_dump($alerts);
-        //
-//        $alerts = $alertsObj->items();
+
+        $alerts = $alertsObj->items();
         // 查询总数据条数
-//        $count = $alerts->total();
+        $count = $alertsObj->total();
 
-//        $alertsObj = json_encode($alerts);
-//        var_dump($alerts);
 
         $alertDetails = [];
         foreach ($alerts as &$alert) {
+            var_dump($alert['domain']);
+
+            //只保留$alert的domain字段，插入在domains表中，如果数据已存在，则不插入
+            if (Db::table('domains')->where('domain', $alert['domain'])->find()) {
+                continue;
+            }
+            $domains = Db::table('domains')->insert(['domain' => $alert['domain']]);
+
+
+            var_dump($domains);
             $domain = $alert['domain'];
             $alert['erji'] = Db::table('datasafe_alerts')->where('domain', $domain)->select()->toArray();
             foreach ($alert['erji'] as &$erji) {
@@ -200,7 +215,7 @@ var_dump($alerts);
         return View::fetch('datasafe_list', [
             'alert_type' => $alerts,
             'alert_details' => $alertDetails,
-//            'alerts' => $alertsObj,
+            'alerts' => $alertsObj,
             'detail' => $detail,
 //            'count' => $count
         ]);

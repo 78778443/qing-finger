@@ -87,23 +87,23 @@
                             </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
-                            {volist name="alert_type" id="alert"}
+                            {volist name="detail" id="alert"}
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{$alert.domain}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {volist name="alert['erji']" id="erji"}
+                                    {//volist name="alert['erji']" id="erji"}
                                     <div id="{$alert.domain}">
-                                        <pre class="scrollable-pre"><code> <span>{$erji.data}</span></code></pre>
+                                        <pre class="scrollable-pre"><code> <span>{//$erji.data}</span></code></pre>
 <!--                                        <pre><code>{//$erji.data}</code></pre>-->
-                                        {volist name="erji['http_id']" id="http_id"}
-                                        <a href="{:URL('datasafe_detail', ['id' => $http_id.id])}"
+                                        {//volist name="erji['http_id']" id="http_id"}
+                                        <a href="{//:URL('datasafe_detail', ['id' => $http_id.id])}"
                                            class="text-custom hover:text-custom-dark">
                                             查看详情
                                         </a>
 
-                                        {/volist}
+                                        {///volist}
                                     </div>
-                                    {/volist}
+                                    {///volist}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">{//$erji.alert_time}</span>
@@ -120,7 +120,7 @@
                         </table>
                         <div class="flex justify-between items-center mt-4">
                             <p class="text-sm text-gray-700">显示 1 到 5 条，共 {\\$count} 条</p>
-                            <div class="pagination">{\\$alert_type|raw}</div>
+                            <div class="pagination">{\\$alerts|raw}</div>
                         </div>
                     </div>
                 </div>

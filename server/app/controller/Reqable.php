@@ -54,8 +54,15 @@ class Reqable extends BaseController
 
     public static function chuli_data($data)
     {
+
+
         foreach ($data as $key => $value) {
 //            var_dump($value);
+//            //判断$value['response']['url']域名的结尾是图片格式的话，不进行插入数据库
+//            if (strpos($value['response']['url'], '.jpg') || strpos($value['response']['url'], '.png') || strpos($value['response']['url'], '.gif') || strpos($value['response']['url'], '.jpeg') || strpos($value['response']['url'], '.bmp') || strpos($value['response']['url'], '.ico') || strpos($value['response']['url'], '.svg') || strpos($value['response']['url'], '.webp') || strpos($value['response']['url'], '.tiff') || strpos($value['response']['url'], '.tif') || strpos(
+//                $value['response']['url'], '.ico'
+//
+//                ))
             $request_time = $value['startedDateTime'];
             $arr['source_ip'] = $value['serverIPAddress'];
             $arr['url'] = $value['request']['url'];
