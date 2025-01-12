@@ -27,5 +27,6 @@ class scan extends Command
 //        aimodel::ai();
         aimodel::mingan_data();
 //        Reqable::test();
+//        aimodel::domainGet();
     }
 }

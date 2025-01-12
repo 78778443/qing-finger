@@ -15,11 +15,13 @@
             text-overflow: ellipsis;
             max-width: 200px; /* 根据需要调整宽度 */
         }
+
         .pagination {
             display: flex;
             gap: 0.5rem; /* 调整分页链接之间的间距 */
             padding: 0.5rem;
         }
+
         .content-container {
             padding: 1rem; /* 增加内容区域的内边距 */
         }
@@ -60,11 +62,15 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">请求类型</label>
-                            <select name="request_type"
+
+
+                            <select name="methond"
                                     class="w-full text-left border border-gray-300 rounded-md px-3 py-2 text-sm bg-white !rounded-button">
                                 <option value="">全部</option>
-                                <option value="GET">GET</option>
-                                <option value="POST">POST</option>
+                                {volist name="results" id="methond"}
+<!--                                //将请求类型添加到选项中，去重-->
+                                <option value="{$methond}">{$methond}</option>
+                                {/volist}
                             </select>
                         </div>
                         <button type="submit" class="w-full bg-custom text-white py-2 text-sm !rounded-button">
@@ -167,7 +173,7 @@
                         </div>
                     </div>
                     <div class="flex justify-between items-center mt-4">
-                        <p class="text-sm text-gray-700">   显示 1 到 5 条，共 {$count} 条</p>
+                        <p class="text-sm text-gray-700"> 显示 1 到 5 条，共 {$count} 条</p>
                         <div class="pagination">{$logs|raw}</div>
                     </div>
                 </div>

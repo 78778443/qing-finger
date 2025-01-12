@@ -175,6 +175,22 @@ class aimodel extends Model
                 $update = DB::name('http_logs')->where('id', $v['id'])->update(['mingandata_scan' => '扫描已完成']);
 //                var_dump($update);
                 Db::name('datasafe_alerts')->insert($data);
+                //将$data['domain]值保存到domains表中，如果domains表中存在该域名，则不插入，如果domains表中不存在该域名，则插入
+                $domain = DB::name('domains')->where('domain', $v['domain'])->find();
+                var_dump($domain);
+                echo "输出domain";
+                if ($domain) {
+                    //如果domains表中存在该域名，则不插入跳过
+                    echo "domains表中存在该域名";
+                } else {
+                    //如果domains表中不存在该域名，则插入
+                    $data = [
+                        'domain' => $v['domain'],
+//                        'created_at' => date('Y-m-d H:i:s'),
+                    ];
+                    Db::name('domains')->insert($data);
+                }
+
             }
         }
     }
@@ -190,5 +206,26 @@ class aimodel extends Model
         $ret_str = preg_replace('/^json/', '', $ret_str);
 
         return $ret_str;
+    }
+
+    public static function domainGet()
+    {
+        $test = Db::table('http_logs')->select()->toArray();
+        foreach ($test as $log) {
+            var_dump('提取前' . $log['url']);
+
+            //将domain的url提取出host
+            $domain = parse_url($log['url'], PHP_URL_HOST);
+//            var_dump($domain);
+//            exit;
+            var_dump('提取后' . $domain. '');
+            //如果domain为空，则跳过循环
+            if (empty($domain)) {
+                continue;
+            } else {
+                // 将domain的url提取出host更新在http_logs数据库的domain字段里
+                Db::table('http_logs')->where('id', $log['id'])->update(['domain' => $domain]);
+            }
+        }
     }
 }
