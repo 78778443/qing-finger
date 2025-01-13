@@ -12,8 +12,32 @@
                 details.style.display = 'none';
             }
         }
+
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#64748b'
+                    },
+                    borderRadius: {
+                        'none': '0px',
+                        'sm': '2px',
+                        DEFAULT: '4px',
+                        'md': '8px',
+                        'lg': '12px',
+                        'xl': '16px',
+                        '2xl': '20px',
+                        '3xl': '24px',
+                        'full': '9999px',
+                        'button': '4px'
+                    }
+                }
+            }
+        }
     </script>
     <style>
+
         .hidden {
             display: none;
         }
@@ -23,6 +47,16 @@
             gap: 0.5rem; /* 调整分页链接之间的间距 */
             padding: 0.5rem;
         }
+
+        .table-row-hover:hover {
+            background-color: #f8fafc;
+        }
+
+        .table-header {
+            background-color: #f8fafc;
+            position: sticky;
+            top: 0;
+            z-index: 10;
     </style>
 
 </head>
@@ -35,33 +69,19 @@
                 <h3 class="text-lg font-medium mb-4">请求过滤</h3>
                 <form action="/index/finger_list" method="get">
                     <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">时间范围</label>
-                            <input type="datetime-local" class="w-full border-gray-300 rounded-md text-sm"/>
-                        </div>
+                        <!--                        <div>-->
+                        <!--                            <label class="block text-sm font-medium text-gray-700 mb-1">时间范围</label>-->
+                        <!--                            <input type="datetime-local" class="w-full border-gray-300 rounded-md text-sm"/>-->
+                        <!--                        </div>-->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">域名</label>
                             <input type="text" name="domain" class="w-full border-gray-300 rounded-md text-sm"
                                    placeholder="请输入域名"/>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">指纹类型</label>
-                            <select name="finger_type"
-                                    class="w-full text-left border border-gray-300 rounded-md px-3 py-2 text-sm bg-white !rounded-button">
-                                <option value="">全部</option>
-                                <option value="Nginx">Nginx</option>
-                                <option value="Thinkphp">Thinkphp</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">请求状态</label>
-                            <select name="status"
-                                    class="w-full text-left border border-gray-300 rounded-md px-3 py-2 text-sm bg-white !rounded-button">
-                                <option value="">全部</option>
-                                <option value="正常">正常</option>
-                                <option value="异常">异常</option>
-                                <option value="待验证">待验证</option>
-                            </select>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">指纹名称</label>
+                            <input type="text" name="name" class="w-full border-gray-300 rounded-md text-sm"
+                                   placeholder="请输入指纹名称"/>
                         </div>
                         <button class="w-full bg-custom text-white py-2 text-sm !rounded-button mt-4">
                             应用筛选
@@ -96,53 +116,100 @@
                     </div>
                 </div>
                 <!--列表框-->
-                <div class="bg-white rounded-lg shadow">
-                    <div class="px-4 py-3 border-b border-gray-200 flex justify-between items-center"><h3
-                                class="text-lg font-medium">指纹列表</h3>
-                    </div>
-                    <div class="p-4">
+                <!--                <div class="bg-white rounded-lg shadow">-->
+                <!--                    <div class="px-4 py-3 border-b border-gray-200 flex justify-between items-center"><h3-->
+                <!--                                class="text-lg font-medium">指纹列表</h3>-->
+                <!--                    </div>-->
+                <!--                    <div class="p-4">-->
+                <!---->
+                <!--                        <table class="min-w-full divide-y divide-gray-200">-->
+                <!--                            <thead class="bg-gray-50">-->
+                <!--                            <tr>-->
+                <!--                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">指纹ID</th>-->
+                <!--                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">域名</th>-->
+                <!--                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">指纹名称-->
+                <!--                                </th>-->
+                <!--                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">描述</th>-->
+                <!--                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">操作</th>-->
+                <!--                            </tr>-->
+                <!--                            </thead>-->
+                <!--                            <tbody class="divide-y divide-gray-200">-->
+                <!--                            {volist name="fingers" id="finger"}-->
+                <!--                            <tr>-->
+                <!--                                <td class="px-6 py-4 text-sm text-gray-900">{$finger.id}</td>-->
+                <!--                                <td class="px-6 py-4 text-sm text-gray-900">{$finger.domain}</td>-->
+                <!--                                <td class="px-6 py-4 text-sm text-gray-900">-->
+                <!--                                    {volist name="finger" id="v2"}-->
+                <!--                                    {volist name="v2" id="v3"}-->
+                <!--                                    <div id="{$v3.domain}">-->
+                <!--                                        <pre class="scrollable-pre"><code> <span>指纹名称：{$v3.name}</span></code></pre>-->
+                <!--                                        <h6>版本：{$v3.version} 服务器：{$v3.servicer} 编程语言：{$v3.language}-->
+                <!--                                            创建时间：{$v3.created_at}</h6>-->
+                <!--                                        <a href="{:URL('finger_detail', ['id' => $v3.finger_id])}"-->
+                <!--                                           class="text-custom hover:text-custom-dark">-->
+                <!--                                            查看详情-->
+                <!--                                        </a>-->
+                <!--                                    </div>-->
+                <!--                                    {/volist}-->
+                <!--                                    {/volist}-->
+                <!--                                </td>-->
+                <!--                            </tr>-->
+                <!--                            {/volist}-->
+                <!--                            </tbody>-->
+                <!--                        </table>-->
+                <!--                        <div class="flex justify-between items-center mt-4">-->
+                <!--                            <p class="text-sm text-gray-700">显示 1 到 10 条，共 {$tiaoshu} 条域名</p>-->
+                <!--                            <div class="pagination">{//$fingers|raw}</div>-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </div>-->
 
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">指纹ID</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">域名</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">指纹名称
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">描述</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">操作</th>
-                            </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200">
-                            {volist name="fingers" id="finger"}
-                            <td class="px-6 py-4 text-sm text-gray-900">{$finger.finger_id}</td>
-                            <td class="px-6 py-4 text-sm text-gray-900">{$finger.domain}</td>
-                            <td class="px-6 py-4 text-sm text-gray-900">{$finger.name}</td>
-                            <td class="px-6 py-4 text-sm text-gray-900">{$finger.description}</td>
-                            <td onclick="toggleDetails({$key})" class="px-6 py-4 text-sm">
-                                <button class="w-full bg-custom text-white py-2 text-sm !rounded-button mt-4">
-                                    双击查看
-                                </button>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="table-header">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-500">指纹 ID</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-500">域名</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-500">指纹名称</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-500">描述</th>
+                            <th class="px-6 py-4 text-left text-sm font-medium text-gray-500">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                        {volist name="fingers" id="finger"}
+                        <!--域名-->
+                        <tr class="table-row-hover">
+                            <td class="px-6 py-4 text-sm text-gray-900" rowspan="3">{$finger.id}</td>
+                            <td class="px-6 py-4 text-sm text-gray-900" rowspan="3">{$finger.domain}</td>
+                        </tr>
+                        {volist name="finger" id="v2"}
+                        {volist name="v2" id="v3"}
+                        <tr class="table-row-hover">
+                            <!--指纹名称-->
+                            <td class="px-6 py-4">
+                                <div class="space-y-2">
+                                    <div class="text-sm text-gray-900">{$v3.name}</div>
+                                    <div class="text-sm text-gray-900">{$v3.version}</div>
+                                </div>
                             </td>
-                            <tr id="details-{$key}" class="hidden">
-                                <td colspan="8">
-                                    <h6>URL：{$finger.domain}</h6>
-                                    <h6>指纹名称：{$finger.name}</h6>
-                                    <h6>版本：{$finger.version}</h6>
-                                    <h6>服务器：{$finger.servicer}</h6>
-                                    <h6>编程语言：{$finger.language}</h6>
-                                    <h6>创建时间：{$finger.created_at}</h6>
-                                </td>
-                            </tr>
-                            {/volist}
-                            </tbody>
-                        </table>
-                        <div class="flex justify-between items-center mt-4">
-                            <p class="text-sm text-gray-700">显示 1 到 10 条，共 {$tiaoshu} 条</p>
-                            <div class="pagination">{$fingers|raw}</div>
-                        </div>
-                    </div>
+                            <!--描述-->
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-gray-500">{$v3.servicer}</div>
+                                <div class="text-sm text-gray-500">{$v3.language}</div>
+                                <div class="text-sm text-gray-500">{$v3.created_at}</div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <button class="text-primary hover:text-primary/80 text-sm">查看详情</button>
+                            </td>
+                        </tr>
+                        {/volist}{/volist}
+
+                        {/volist}
+                        </tbody>
+                    </table>
                 </div>
+
+                <!--                结尾-->
             </div>
         </div>
     </div>

@@ -103,6 +103,7 @@
                             {/volist}
                             </tbody>
                         </table>
+                        <!--翻页和总条数-->
                         <div class="flex justify-between items-center mt-4">
                             <p class="text-sm text-gray-700">显示 1 到 5 条，共 {$total} 条</p>
                             <div class="pagination">{$detailObj|raw}</div>

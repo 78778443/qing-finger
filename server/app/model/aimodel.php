@@ -127,6 +127,12 @@ class aimodel extends Model
                     'created_at' => date('Y-m-d H:i:s'),
                 ];
                 Db::name('fingers')->insert($data);
+
+                //将$data['domain']字段插入到domains表中，如果不存在则插入
+                if (!Db::name('domains')->where('domain', $v['domain'])->find()) {
+                    Db::name('domains')->insert(['domain' => $v['domain']]);
+                }
+
             }
             //更新ai_scan字段的值为扫描已完成
             DB::name('http_logs')->where('id', $v['id'])->update(['ai_scan' => '扫描已完成']);
@@ -135,33 +141,22 @@ class aimodel extends Model
 
     public static function mingan_data()
     {
-        //判断http_logs表中的mingandata_scan字段是否为no_scan，如果是则进行扫描
+        // 判断 http_logs 表中的 mingandata_scan 字段是否为 no_scan，如果是则进行扫描
         $http = Db::name('http_logs')->where('mingandata_scan', 'no_scan')->select()->toArray();
 
         foreach ($http as $v) {
-            //使用正则表达式匹配response_body中的敏感信息，例如手机号、身份证、邮箱等
+            // 使用正则表达式匹配 response_body 中的敏感信息，例如手机号、身份证、邮箱等
             preg_match_all('/\b1[3-9]\d{9}\b/', $v['response_body'], $phone);
             preg_match_all('/\b[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]\b/', $v['response_body'], $idcard);
             preg_match_all('/[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+/', $v['response_body'], $email);
 
             if (!empty($phone[0]) || !empty($idcard[0]) || !empty($email[0])) {
-                foreach ($phone[0] as $v1) {
-//                    var_dump($v1);
-                }
-                foreach ($idcard[0] as $v2) {
-//                    var_dump($v2);
-                }
-                foreach ($email[0] as $v3) {
-//                    var_dump($v3);
-                }
-
                 $info = [
                     'phone:' => $phone[0],
                     'idcard:' => $idcard[0],
                     'email:' => $email[0],
                 ];
-//            json_encode($info);
-//
+
                 $data_str = json_encode($info, JSON_UNESCAPED_UNICODE);
                 $data = [
                     'http_id' => $v['id'],
@@ -170,30 +165,30 @@ class aimodel extends Model
                     'alert_time' => $v['request_time'],
                 ];
 
-                //将http_logs表中的mingandata_scan字段的值为扫描已完成
-
-                $update = DB::name('http_logs')->where('id', $v['id'])->update(['mingandata_scan' => '扫描已完成']);
-//                var_dump($update);
-                Db::name('datasafe_alerts')->insert($data);
-                //将$data['domain]值保存到domains表中，如果domains表中存在该域名，则不插入，如果domains表中不存在该域名，则插入
-                $domain = DB::name('domains')->where('domain', $v['domain'])->find();
-                var_dump($domain);
-                echo "输出domain";
-                if ($domain) {
-                    //如果domains表中存在该域名，则不插入跳过
-                    echo "domains表中存在该域名";
+                // 检查 datasafe_alerts 表中是否已存在该 http_id 的记录
+                $existingRecord = Db::name('datasafe_alerts')->where('http_id', $v['id'])->find();
+                if ($existingRecord) {
+                    // 如果存在，则更新现有记录
+                    Db::name('datasafe_alerts')->where('http_id', $v['id'])->update($data);
                 } else {
-                    //如果domains表中不存在该域名，则插入
-                    $data = [
-                        'domain' => $v['domain'],
-//                        'created_at' => date('Y-m-d H:i:s'),
-                    ];
-                    Db::name('domains')->insert($data);
+                    // 如果不存在，则插入新记录
+                    Db::name('datasafe_alerts')->insert($data);
+                    var_dump("插入一条http_id:" . $data['http_id']);
                 }
 
+                // 将 http_logs 表中的 mingandata_scan 字段的值设置为扫描已完成
+                Db::name('http_logs')->where('id', $v['id'])->update(['mingandata_scan' => '扫描已完成']);
+
+                // 将 $data['domain'] 值保存到 domains 表中，如果 domains 表中存在该域名，则不插入，如果 domains 表中不存在该域名，则插入
+                $domain = Db::name('domains')->where('domain', $v['domain'])->find();
+                if (!$domain) {
+                    // 如果 domains 表中不存在该域名，则插入
+                    Db::name('domains')->insert(['domain' => $v['domain']]);
+                }
             }
         }
     }
+
 
     public static function extractJsonData(string $input): string
     {
@@ -218,7 +213,7 @@ class aimodel extends Model
             $domain = parse_url($log['url'], PHP_URL_HOST);
 //            var_dump($domain);
 //            exit;
-            var_dump('提取后' . $domain. '');
+            var_dump('提取后' . $domain . '');
             //如果domain为空，则跳过循环
             if (empty($domain)) {
                 continue;

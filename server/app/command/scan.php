@@ -26,7 +26,8 @@ class scan extends Command
 //        $output->writeln('app\command\scan');
 //        aimodel::ai();
         aimodel::mingan_data();
-//        Reqable::test();
 //        aimodel::domainGet();
+//        Reqable::test();
+
     }
 }

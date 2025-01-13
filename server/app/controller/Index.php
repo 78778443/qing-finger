@@ -57,7 +57,6 @@ class Index extends BaseController
         return View::fetch();
     }
 
-
     public function detail($id)
     {
         // 根据ID查询详细数据
@@ -69,8 +68,6 @@ class Index extends BaseController
 
     public function finger_list(Request $request)
     {
-
-
         // 总指纹数
         $totalCountSql = Db::table('fingers')->distinct(true)->field('COUNT(DISTINCT finger_id) as count')->buildSql();
         $totalCountResult = Db::query($totalCountSql);
@@ -102,61 +99,82 @@ class Index extends BaseController
         $difference = $count - $yesterdayCount;
         $total = Db::name('fingers');
 
-
+        //获取请求参数
         $domain = $request->param('domain');
-        $finger_type = $request->param('finger_type');
-        $status = $request->param('status');
-        $where = [];
-        if (!empty($domain)) {
-            $where['domain'] = $domain;
-        }
-        if (!empty($finger_type)) {
-            $where['finger_type'] = $finger_type;
-        }
-        if (!empty($status)) {
-            $where['status'] = $status;
-        }
-        // 输出指纹列表
-        $fingers = Db::table('fingers')->where($where)->order('id', 'desc')->paginate(10);
-        $tiaoshu = $fingers->total();
+        $name = $request->param('name');
+//        // 请求参数不为空时，将查询条件添加到 $where 数组中
+//        $where = [];
+//        if (!empty($domain)) {
+//            $where['domain'] = $domain;
+//        }
+//        if (!empty($name)) {
+//            $where['name'] = $name;
+//        }
+        //给$domain的值为空时，给它一个默认值防止报错
+        $domain = $domain ?? '';
+        $name = $name ?? '';
+//        var_dump($domain);
 
+        //对domian参数和name参数进行模糊查询
+        $fingersObj = Db::table('fingers')
+            ->where('domain', 'like', '%' . $domain . '%')
+            ->where('name', 'like', '%' . $name . '%')
+            ->order('id', 'desc')
+            ->select()->toArray();
+        //把$detailObj里面的domain字段转换为一维数组
+        $detailArr = array_column($fingersObj, 'domain');
+//        var_dump($detailArr);
+
+        // 没有搜索参数，查询全部数据
+        $domainObj = Db::table('domains')->whereIn('domain', $detailArr)->order('id', 'desc')->paginate(['query' => $request->param(), 'list_rows' => 5]);
+
+//        var_dump($domainObj);
+        // 获取domains表中一共有多少条，需要随着搜索条件进行过滤
+        $total = $domainObj->total();
+        $detailArr = $domainObj->items();
+
+        foreach ($detailArr as &$item) {
+            // 使用domain 查询对应的域名
+            $item['finger'] = Db::table('fingers')->where('domain', $item['domain'])->select()->toArray();
+//            var_dump($item);
+        }
+
+//        var_dump($detailArr);
+//        // 输出指纹列表
+//        $fingers = Db::table('fingers')->where($where)->order('id', 'desc')->paginate(10);
+//        $tiaoshu = $fingers->total();
+////        var_dump($fingers->items());
+//        //查询fingers表中的domain字段，如果存在则不插入，不存在则插入
+//        $save = DB::name('fingers')->select()->toArray();
+//        foreach ($save as $key => $v) {
+//            //将$fingers['domain']字段插入到domains表中，如果不存在则插入
+//            if (!Db::name('domains')->where('domain', $v['domain'])->find()) {
+//                var_dump($v['domain']);
+//                Db::name('domains')->insert(['domain' => $v['domain']]);
+//            }
+//        }
         // 将结果传递给视图
         return View::fetch('index/finger_list', [
             'totalCount' => $totalCount,
             'totalDifference' => $totalDifference,
-            'fingers' => $fingers,
+            'fingers' => $detailArr,
             "count" => $count,
             'difference' => $difference,
             'total' => $total,
-            'tiaoshu' => $tiaoshu,
+            'tiaoshu' => $total,
         ]);
     }
 
 
     public function finger_detail($id)
     {
-        $finger = Db::table('fingers')->where('id', $id)->find();
-        return view('finger_detail', ['finger' => $finger]);
+        $finger = Db::table('http_logs')->where('id', $id)->find();
+//        return view('finger_detail', ['finger' => $finger]);
+
+        // 返回JSON格式的数据
+        return json($finger);
     }
 
-
-    public function index_detail()
-    {
-        // 使用视图输出过滤
-        return View::fetch();
-    }
-
-    public function system_setting()
-    {
-        // 使用视图输出过滤
-        return View::fetch();
-    }
-
-    public function test()
-    {
-        // 使用视图输出过滤
-        return View::fetch();
-    }
 
     public function datasafe_list(Request $request)
     {
@@ -172,8 +190,6 @@ class Index extends BaseController
             ->where('data', 'like', '%' . $params['data'] . '%')
             ->order('id', 'desc')
             ->select()->toArray();
-//            ->paginate(['query' => $params, 'list_rows' => 5]);
-//        var_dump($detailObj);
         //把$detailObj里面的domain字段转换为一维数组
         $detailArr = array_column($detailObj, 'domain');
         // 没有搜索参数，查询全部数据
@@ -181,17 +197,12 @@ class Index extends BaseController
 
         // 获取domains表中一共有多少条，需要随着搜索条件进行过滤
         $total = $detailObj->total();
-//        var_dump($total);
-
         $detailArr = $detailObj->items();
-
         foreach ($detailArr as &$item) {
             // 使用domain 查询对应的域名
             $item['alert'] = Db::table('datasafe_alerts')->where('domain', $item['domain'])->select()->toArray();
-            // 只保留$alert的domain字段，插入在domains表中，如果数据已存在，则不插入
-
-
         }
+
         return view('datasafe_list', [
             'detail' => $detailArr,
             'detailObj' => $detailObj,
@@ -200,69 +211,25 @@ class Index extends BaseController
     }
 
 
-    public
-    function datasafe_list_beak(Request $request)
-    {
-        $domain = $request->param();
-        //查询对应域名下的所有数据
-        $detail = Db::table('datasafe_alerts')
-            ->where($domain)
-            ->select()
-            ->toArray();
-//        var_dump($detail);
-
-        $alertsObj = Db::table('datasafe_alerts')
-            ->field('domain, GROUP_CONCAT(id) as ids') // 获取域名和关联ID
-            ->group('domain') // 按照域名分组
-            ->where($domain) // 应用查询条件
-            ->paginate(5); // 将对象转换为数组
-
-
-        $alerts = $alertsObj->items();
-        // 查询总数据条数
-        $count = $alertsObj->total();
-
-
-        $alertDetails = [];
-        foreach ($alerts as &$alert) {
-//            var_dump($alert['domain']);
-
-            //只保留$alert的domain字段，插入在domains表中，如果数据已存在，则不插入
-            if (Db::table('domains')->where('domain', $alert['domain'])->find()) {
-                continue;
-            }
-            $domains = Db::table('domains')->insert(['domain' => $alert['domain']]);
-
-
-            var_dump($domains);
-            $domain = $alert['domain'];
-            $alert['erji'] = Db::table('datasafe_alerts')->where('domain', $domain)->select()->toArray();
-            foreach ($alert['erji'] as &$erji) {
-//                var_dump($erji['http_id']);
-                $http_id = Db::table('http_logs')->where('id', $erji['http_id'])->select()->toArray();
-                $erji['http_id'] = $http_id;
-            }
-        }
-//        var_dump($alerts);
-
-        // 将数据传递给视图
-        return View::fetch('datasafe_list', [
-            'alert_type' => $alerts,
-            'alert_details' => $alertDetails,
-            'alerts' => $alertsObj,
-            'detail' => $detail,
-//            'count' => $count
-        ]);
-    }
-
-    public
-    function datasafe_detail($id)
+    public function datasafe_detail($id)
     {
         // 根据ID查询详细数据
         $log = Db::table('http_logs')->where('id', $id)->find();
 
         // 返回JSON格式的数据
         return json($log);
+    }
+
+    public function system_setting()
+    {
+        // 使用视图输出过滤
+        return View::fetch();
+    }
+
+    public function test()
+    {
+        // 使用视图输出过滤
+        return View::fetch();
     }
 
 
