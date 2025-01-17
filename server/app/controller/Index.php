@@ -69,7 +69,9 @@ class Index extends BaseController
     public function finger_list(Request $request)
     {
         // 总指纹数
-        $totalCountSql = Db::table('fingers')->distinct(true)->field('COUNT(DISTINCT finger_id) as count')->buildSql();
+//        $totalCountSql = Db::table('fingers')->distinct(true)->field('COUNT(DISTINCT finger_id) as count')->buildSql();
+        $totalCountSql = Db::table('fingers')->distinct(true)->field('COUNT(DISTINCT id) as count')->buildSql();
+//        var_dump($totalCountSql);
         $totalCountResult = Db::query($totalCountSql);
         $totalCount = $totalCountResult[0]['count'];
         // 昨日去重查询总指纹数（去重 finger_id）
@@ -98,6 +100,9 @@ class Index extends BaseController
         // 计算今日新增与昨日新增的差值
         $difference = $count - $yesterdayCount;
         $total = Db::name('fingers');
+        // 查询fingers表中重复的name字段有多少条
+        $duplicateCount = $total->group('name')->having('COUNT(name) > 1')->count();
+//        var_dump($duplicateCount);
 
         //获取请求参数
         $domain = $request->param('domain');
@@ -136,23 +141,8 @@ class Index extends BaseController
         foreach ($detailArr as &$item) {
             // 使用domain 查询对应的域名
             $item['finger'] = Db::table('fingers')->where('domain', $item['domain'])->select()->toArray();
-//            var_dump($item);
         }
 
-//        var_dump($detailArr);
-//        // 输出指纹列表
-//        $fingers = Db::table('fingers')->where($where)->order('id', 'desc')->paginate(10);
-//        $tiaoshu = $fingers->total();
-////        var_dump($fingers->items());
-//        //查询fingers表中的domain字段，如果存在则不插入，不存在则插入
-//        $save = DB::name('fingers')->select()->toArray();
-//        foreach ($save as $key => $v) {
-//            //将$fingers['domain']字段插入到domains表中，如果不存在则插入
-//            if (!Db::name('domains')->where('domain', $v['domain'])->find()) {
-//                var_dump($v['domain']);
-//                Db::name('domains')->insert(['domain' => $v['domain']]);
-//            }
-//        }
         // 将结果传递给视图
         return View::fetch('index/finger_list', [
             'totalCount' => $totalCount,
@@ -161,7 +151,7 @@ class Index extends BaseController
             "count" => $count,
             'difference' => $difference,
             'total' => $total,
-            'tiaoshu' => $total,
+            'domainObj' => $domainObj,
         ]);
     }
 

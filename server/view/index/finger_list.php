@@ -106,8 +106,8 @@
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow">
                         <h3 class="text-lg font-medium text-gray-900">总域名数</h3>
-                        <p class="mt-2 text-3xl font-semibold text-blue-500">98.5%</p>
-                        <p class="text-sm text-gray-500 mt-1">较昨日 +0.5%</p>
+                        <p class="mt-2 text-3xl font-semibold text-blue-500">{$total}</p>
+<!--                        <p class="text-sm text-gray-500 mt-1">较昨日 +0.5%</p>-->
                     </div>
                     <div class="bg-white p-4 rounded-lg shadow">
                         <h3 class="text-lg font-medium text-gray-900">重复指纹</h3>
@@ -156,6 +156,10 @@
                         </tbody>
                         {/volist}
                     </table>
+                    <div class="flex justify-between items-center mt-4">
+                        <p class="text-sm text-gray-700"> 显示 1 到 5 条，共 {$total} 条</p>
+                        <div class="pagination">{$domainObj|raw}</div>
+                    </div>
                 </div>
 
                 <!--                结尾-->
